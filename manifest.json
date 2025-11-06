@@ -1,0 +1,14 @@
+{
+  "manifest_version": 3,
+  "name": "Printr – Mini Banner PnL",
+  "version": "0.1.2",
+  "description": "Cartel con token, USD y PnL encima del panel BUY/SELL en Printr.",
+  "content_scripts": [
+    {
+      "matches": ["https://app.printr.money/*"],
+      "js": ["content.js"],
+      "run_at": "document_idle"
+    }
+  ],
+  "host_permissions": ["https://app.printr.money/*"]
+}
