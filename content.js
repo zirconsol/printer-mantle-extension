@@ -1,5 +1,7 @@
 (() => {
   const WID = "printr-mini-pnl-banner";
+  
+  console.log("[CS] content script loaded");
 
   // ===== Utils =====
   const isVisible = (el) => !!(el && el.offsetParent !== null);
@@ -15,63 +17,28 @@
     return null;
   };
 
-  // Encontrar la barra de tabs BUY/SELL para insertar arriba
   function findTabsBar() {
     const buy = elByText("[role='tab'],button,div,span,a", "BUY");
+    console.log("[CS] findTabsBar: buy button found?", !!buy);
     if (!buy) return null;
     let cur = buy;
     for (let i = 0; i < 6 && cur?.parentElement; i++) {
       const parent = cur.parentElement;
       const hasSell = Array.from(parent.querySelectorAll("[role='tab'],button,div,span,a"))
-        .some(n => isVisible(n) && up(n.textContent).startsWith("SELL"));
-      if (hasSell) return parent;
+        .some((n) => isVisible(n) && up(n.textContent).startsWith("SELL"));
+      if (hasSell) {
+        console.log("[CS] findTabsBar: found tabs bar container");
+        return parent;
+      }
       cur = parent;
     }
+    console.log("[CS] findTabsBar: tabs bar not found");
     return null;
-  }
-
-  // Slug del token desde /trade/:slug (puede ser 0x... largo o 20 bytes)
-  function getTradeSlug() {
-    const m = location.pathname.match(/\/trade\/(0x[0-9a-fA-F]+)/);
-    return m ? m[1] : null;
-  }
-
-  // Pide /api/getToken/:slug y devuelve imageUrl (o null)
-  async function fetchTokenImageUrl(slug) {
-    if (!slug) return null;
-    const url = `${location.origin}/api/getToken/${slug}`;
-    try {
-      const r = await fetch(url, {
-        method: "GET",
-        headers: { "Accept": "*/*", "Referer": location.href }
-      });
-      if (!r.ok) return null;
-
-      // El endpoint suele devolver JSON válido aun con content-type text/plain
-      const text = await r.text();
-      let j = null;
-      try { j = JSON.parse(text); } catch { return null; }
-
-      // Campo directo provisto por Printr
-      const direct = j?.imageUrl || j?.image || j?.icon;
-      if (typeof direct === "string" && direct.trim()) return direct.trim();
-
-      // Fallbacks por si cambia la forma
-      const nested =
-        j?.token?.imageUrl ||
-        j?.token?.image ||
-        j?.data?.imageUrl ||
-        j?.data?.image || null;
-      if (typeof nested === "string" && nested.trim()) return nested.trim();
-
-      return null;
-    } catch {
-      return null;
-    }
   }
 
   // ===== UI =====
   function buildBanner() {
+    console.log("[CS] buildBanner: creating banner");
     const host = document.createElement("div");
     host.id = WID;
     host.style.margin = "6px 0";
@@ -81,7 +48,6 @@
 
     const style = document.createElement("style");
     style.textContent = `
-      /* El contenedor interno se alinea a la derecha */
       .wrap {
         font-family: "PP Monument Extended", ui-sans-serif, system-ui, sans-serif;
         font-weight: 700;
@@ -89,124 +55,261 @@
         display: flex;
         align-items: center;
         gap: 10px;
-        margin-left: auto;            /* empuja el bloque a la derecha */
-        max-width: max-content;       /* ancho del contenido */
-        padding-right: 16px;          /* ajuste fino hacia la derecha */
+        margin-left: auto;
+        max-width: 100%;
+        padding-right: 16px;
         background: transparent !important;
         border: none !important;
         box-shadow: none !important;
       }
-
-      /* icono: slot para el logo (con fallback "!") */
-      .icon {
-        width: 18px; height: 18px; border-radius: 50%;
-        background: transparent;
-        display: inline-flex; align-items: center; justify-content: center;
-        overflow: hidden;
-        border: 1px dashed rgba(187,187,187,.35);
-        color: #bbb; font-size: 12px;
+      .row {
+        display: flex; gap: 16px; flex-wrap: wrap;
+        justify-content: flex-end; width: 100%;
       }
-      .icon img {
-        width: 100%; height: 100%; object-fit: cover; display: block;
-      }
-
-      /* blanco brillante para el nombre del token */
-      .name {
-        color: #ffffff !important;
-        font-weight: 800;
-        text-decoration: none;
-        letter-spacing: 0.2px;
-      }
-      .name:hover { text-decoration: underline; }
-
-      /* gris medio para el monto en USD */
-      .val {
-        color: #a0a0a0;
-        opacity: 1;
-        font-weight: 700;
-      }
-
-      /* PnL en verde (transparente) */
-      .pct {
-        font-weight: 800;
-        font-size: 12px;
-        color: rgb(78, 194, 23);
+      .item {
+        display: inline-flex; align-items: center; gap: 8px;
         background: transparent;
       }
-
-      @media (prefers-color-scheme: light) {
-        .icon { border-color: rgba(100,100,100,.35); color:#666; }
-      }
+      .name { color:#ffffff !important; font-weight:800; text-decoration:none; }
+      .name:hover{ text-decoration: underline; }
+      .val { color:#a0a0a0; opacity:1; font-weight:700; }
+      .pct { font-weight:800; font-size:12px; color:rgb(78,194,23); }
+      .wal { margin-left: 8px; color:#8b8b8b; font-weight:600; font-size:12px }
     `;
 
     const body = document.createElement("div");
     body.className = "wrap";
     body.innerHTML = `
-      <div class="icon" title="Token logo"><span>!</span></div>
-      <a id="tkn" class="name" href="#" target="_blank" rel="noopener">BILLI</a>
-      <div class="val">$20.42</div>
-      <div class="pct">+4.25%</div>
+      <div class="row" id="tokensRow"></div>
+      <span id="wal" class="wal"></span>
     `;
 
     shadow.append(style, body);
     return host;
   }
 
-  async function placeBanner() {
-    if (document.getElementById(WID)) return true;
-
+  function ensureBanner() {
+    if (document.getElementById(WID)) {
+      console.log("[CS] ensureBanner: banner already exists");
+      return document.getElementById(WID);
+    }
     const tabsBar = findTabsBar();
-    if (!tabsBar || !tabsBar.parentElement) return false;
-
+    if (!tabsBar || !tabsBar.parentElement) {
+      console.log("[CS] ensureBanner: tabs bar not found, cannot insert banner");
+      return null;
+    }
     const host = buildBanner();
     tabsBar.parentElement.insertBefore(host, tabsBar);
+    console.log("[CS] ensureBanner: banner inserted successfully");
+    return host;
+  }
 
-    // Link del nombre -> trade actual
-    const slug = getTradeSlug();
-    const href = slug ? `${location.origin}/trade/${slug}` : location.href;
-    const a = host.shadowRoot.getElementById("tkn");
-    if (a) a.href = href;
-
-    // Cargar imagen desde /api/getToken/:slug → imageUrl
-    try {
-      const imgUrl = await fetchTokenImageUrl(slug);
-      if (imgUrl) {
-        const icon = host.shadowRoot.querySelector(".icon");
-        icon.innerHTML = "";
-        const img = document.createElement("img");
-        img.src = imgUrl;            // usamos URL directa (cdn.printr.money)
-        img.alt = "logo";
-        img.loading = "lazy";
-        img.referrerPolicy = "no-referrer";
-        img.onerror = () => { icon.textContent = "!"; }; // fallback
-        icon.appendChild(img);
-      }
-    } catch {
-      /* fallback "!" */
+  function setWalletBadge(addr) {
+    console.log("[CS] setWalletBadge:", addr);
+    const host = document.getElementById(WID);
+    const r = host?.shadowRoot;
+    if (!r) {
+      console.log("[CS] setWalletBadge: no shadowRoot found");
+      return false;
     }
-
+    const el = r.querySelector("#wal");
+    if (!el) {
+      console.log("[CS] setWalletBadge: wallet element not found");
+      return false;
+    }
+    if (addr && /^0x[a-fA-F0-9]{40}$/i.test(addr)) {
+      const compact = `${addr.slice(0, 6)}...${addr.slice(-4)}`;
+      el.textContent = `(${compact})`;
+      console.log("[CS] setWalletBadge: set to", compact);
+    } else {
+      el.textContent = "";
+    }
     return true;
   }
 
-  // Boot + SPA observers
-  let tries = 0;
-  function bootTry() {
-    if (placeBanner()) return;
-    if (++tries < 30) setTimeout(bootTry, 200);
+  function renderTokens(tokens) {
+    console.log("[CS] renderTokens: rendering", tokens?.length || 0, "tokens");
+    const host = document.getElementById(WID);
+    const r = host?.shadowRoot;
+    if (!r) {
+      console.log("[CS] renderTokens: no shadowRoot");
+      return;
+    }
+    const row = r.getElementById("tokensRow");
+    if (!row) {
+      console.log("[CS] renderTokens: tokensRow element not found");
+      return;
+    }
+
+    row.textContent = ""; // clear
+    if (!tokens || tokens.length === 0) {
+      const span = document.createElement("span");
+      span.className = "val";
+      span.textContent = "No tokens with balance";
+      row.appendChild(span);
+      console.log("[CS] renderTokens: no tokens to display");
+      return;
+    }
+
+    for (const t of tokens) {
+      const a = document.createElement("a");
+      a.className = "name";
+      a.href = "#";
+      a.target = "_blank";
+      a.textContent = t.symbol || t.name || "TOKEN";
+
+      const val = document.createElement("span");
+      val.className = "val";
+      val.textContent = "$20.42";
+
+      const pct = document.createElement("span");
+      pct.className = "pct";
+      pct.textContent = "+4.25%";
+
+      const item = document.createElement("div");
+      item.className = "item";
+      item.append(a, val, pct);
+
+      row.appendChild(item);
+    }
+    console.log("[CS] renderTokens: rendered", tokens.length, "tokens successfully");
   }
 
-  const mo = new MutationObserver(() => placeBanner());
+  function showLoading() {
+    console.log("[CS] showLoading");
+    const host = document.getElementById(WID);
+    const r = host?.shadowRoot;
+    const row = r?.getElementById("tokensRow");
+    if (!row) {
+      console.log("[CS] showLoading: tokensRow not found");
+      return;
+    }
+    row.textContent = "";
+    const span = document.createElement("span");
+    span.className = "val";
+    span.textContent = "Loading tokens…";
+    row.appendChild(span);
+  }
+
+  function showError(message) {
+    console.log("[CS] showError:", message);
+    const host = document.getElementById(WID);
+    const r = host?.shadowRoot;
+    const row = r?.getElementById("tokensRow");
+    if (!row) return;
+    row.textContent = "";
+    const span = document.createElement("span");
+    span.className = "val";
+    span.textContent = message;
+    row.appendChild(span);
+  }
+
+  async function requestAndRenderIfWallet() {
+    console.log("[CS] requestAndRenderIfWallet: starting");
+    
+    // asegurar banner con timeout más largo
+    let tries = 0;
+    while (!ensureBanner() && tries < 50) {
+      await new Promise((r) => setTimeout(r, 200));
+      tries++;
+    }
+
+    if (!document.getElementById(WID)) {
+      console.log("[CS] requestAndRenderIfWallet: failed to create banner after", tries, "tries");
+      return;
+    }
+
+    console.log("[CS] requestAndRenderIfWallet: banner ready, requesting wallet from background");
+
+    showLoading();
+
+    // En lugar de leer storage.session directamente (que no funciona en content scripts),
+    // pedimos al background que nos dé la wallet Y escanee los tokens en una sola llamada
+    console.log("[CS] requestAndRenderIfWallet: sending SCAN_TOKENS_MS message to background");
+    
+    try {
+      chrome.runtime.sendMessage({ type: "SCAN_TOKENS_MS" }, (resp) => {
+        if (chrome.runtime.lastError) {
+          console.error("[CS] sendMessage error:", chrome.runtime.lastError.message);
+          showError("Connection error");
+          return;
+        }
+        
+        console.log("[CS] requestAndRenderIfWallet: received response:", resp);
+        
+        if (!resp?.ok) {
+          console.warn("[CS] scan error:", resp?.error);
+          showError(resp?.error || "Scan error");
+          return;
+        }
+        
+        // Si hay items, significa que hay wallet
+        if (resp.items && resp.items.length >= 0) {
+          // Pedir la wallet para mostrarla en el badge
+          chrome.runtime.sendMessage({ type: "GET_WALLET" }, (walletResp) => {
+            if (walletResp?.wallet) {
+              setWalletBadge(walletResp.wallet);
+            }
+          });
+        }
+        
+        console.log("[CS] requestAndRenderIfWallet: rendering tokens", resp.items);
+        renderTokens(resp.items || []);
+      });
+    } catch (e) {
+      console.error("[CS] requestAndRenderIfWallet: exception:", e);
+      showError("Exception: " + e.message);
+    }
+  }
+
+  // ===== Boot/SPA =====
+  console.log("[CS] setting up observers and listeners");
+  
+  const mo = new MutationObserver(() => {
+    if (!document.getElementById(WID)) {
+      ensureBanner();
+    }
+  });
   mo.observe(document.documentElement, { childList: true, subtree: true });
 
   const origPush = history.pushState, origReplace = history.replaceState;
-  const trig = () => queueMicrotask(placeBanner);
-  history.pushState = function(){ const r = origPush.apply(this, arguments); trig(); return r; };
-  history.replaceState = function(){ const r = origReplace.apply(this, arguments); trig(); return r; };
+  const trig = () => {
+    console.log("[CS] navigation detected, ensuring banner");
+    queueMicrotask(() => {
+      ensureBanner();
+      // Trigger scan after navigation
+      setTimeout(() => requestAndRenderIfWallet(), 1000);
+    });
+  };
+  
+  history.pushState = function () { const r = origPush.apply(this, arguments); trig(); return r; };
+  history.replaceState = function () { const r = origReplace.apply(this, arguments); trig(); return r; };
   window.addEventListener("popstate", trig);
 
   if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", bootTry, { once:true });
+    console.log("[CS] waiting for DOMContentLoaded");
+    document.addEventListener("DOMContentLoaded", () => {
+      console.log("[CS] DOMContentLoaded fired");
+      ensureBanner();
+      setTimeout(() => requestAndRenderIfWallet(), 500);
+    }, { once: true });
   } else {
-    bootTry();
+    console.log("[CS] document already ready");
+    ensureBanner();
+    setTimeout(() => requestAndRenderIfWallet(), 500);
   }
+
+  // Cuando BG detecta/actualiza la wallet, refrescar
+  chrome.runtime.onMessage?.addListener((msg) => {
+    console.log("[CS] received message from background:", msg);
+    if (msg?.type === "WALLET_UPDATE" && msg.wallet) {
+      console.log("[CS] WALLET_UPDATE received, refreshing");
+      setTimeout(() => {
+        setWalletBadge(msg.wallet);
+        requestAndRenderIfWallet();
+      }, 500);
+    }
+  });
+
+  console.log("[CS] content script initialization complete");
 })();

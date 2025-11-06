@@ -1,14 +1,20 @@
 {
   "manifest_version": 3,
-  "name": "Printr – Mini Banner PnL",
-  "version": "0.1.2",
-  "description": "Cartel con token, USD y PnL encima del panel BUY/SELL en Printr.",
+  "name": "Printr – Entry Metrics",
+  "version": "1.4.0",
+  "description": "Muestra tokens con balance de la wallet + info hardcodeada.",
+  "permissions": ["storage", "webRequest"],
+  "host_permissions": [
+    "https://app.printr.money/*",
+    "https://mantle-rpc.publicnode.com/*",
+    "https://explorer.mantle.xyz/api/*"
+  ],
+  "background": { "service_worker": "background.js", "type": "module" },
   "content_scripts": [
     {
       "matches": ["https://app.printr.money/*"],
       "js": ["content.js"],
       "run_at": "document_idle"
     }
-  ],
-  "host_permissions": ["https://app.printr.money/*"]
+  ]
 }
