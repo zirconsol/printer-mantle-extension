@@ -76,7 +76,7 @@
       .pct {
         font-weight: 800;
         font-size: 12px;
-        color: #16a34a; /* verde por defecto */
+        color: rgb(78, 194, 23); /* verde por defecto */
         background: transparent;
       }
       .icon{
@@ -88,7 +88,6 @@
       }
       .name:hover{text-decoration:underline}
       .val{opacity:.9;font-weight:700}
-      .pct{font-weight:800;font-size:12px;color:#16a34a;background:transparent}
       @media (prefers-color-scheme:light){
         .icon{border-color:rgba(100,100,100,.35); color:#666}
       }
