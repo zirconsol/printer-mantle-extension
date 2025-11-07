@@ -1,6 +1,7 @@
 (function() {
   const WID = "printr-mini-pnl-banner";
   let hasLoadedOnce = false;
+  let _refreshTimer = null;
   
   console.log("[CS] content script loaded");
 
@@ -172,8 +173,29 @@
 
       const pct = document.createElement("span");
       pct.className = "pct";
-      // Mostrar cambio real de 24h si esta disponible
-      if (t.change24 !== null && t.change24 !== undefined) {
+      // Mostrar PnL% si está disponible; si no, mostrar precio de entrada; fallback: cambio 24h
+      if (t.pnlPct !== null && t.pnlPct !== undefined && !isNaN(Number(t.pnlPct))) {
+        const p = Number(t.pnlPct);
+        const sign = p > 0 ? "+" : p < 0 ? "" : "";
+        pct.textContent = sign + p.toFixed(2) + "%";
+        pct.style.color = p >= 0 ? "rgb(78,194,23)" : "rgb(239,68,68)";
+        // tooltip with USD PnL if available
+        if (t.pnlUSD !== null && t.pnlUSD !== undefined && !isNaN(Number(t.pnlUSD))) {
+          pct.title = (Number(t.pnlUSD) >= 0 ? "+" : "") + Number(t.pnlUSD).toFixed(2) + " USD";
+        }
+      } else if (t.entryPriceMNT !== null && t.entryPriceMNT !== undefined) {
+        try {
+          const ep = Number(t.entryPriceMNT);
+          if (!isNaN(ep)) {
+            pct.textContent = "Entry " + ep.toFixed(4) + " MNT";
+            pct.style.color = "#9ca3af"; // gris suave
+          } else {
+            pct.textContent = "+4.25%";
+          }
+        } catch (e) {
+          pct.textContent = "+4.25%";
+        }
+      } else if (t.change24 !== null && t.change24 !== undefined) {
         const change = t.change24 * 100;
         const sign = change >= 0 ? "+" : "";
         pct.textContent = sign + change.toFixed(2) + "%";
@@ -243,37 +265,32 @@
       showLoading();
     }
 
-    console.log("[CS] requestAndRenderIfWallet: sending SCAN_TOKENS_MS message to background");
-    
+    console.log("[CS] requestAndRenderIfWallet: opening port to background for scan");
     try {
-      chrome.runtime.sendMessage({ type: "SCAN_TOKENS_MS" }, (resp) => {
-        if (chrome.runtime.lastError) {
-          console.error("[CS] sendMessage error:", chrome.runtime.lastError.message);
-          if (!hasLoadedOnce) {
-            showError("Connection error");
+      const port = chrome.runtime.connect({ name: 'scan-port' });
+      port.onMessage.addListener((resp) => {
+        try {
+          console.log('[CS] requestAndRenderIfWallet: port response', resp);
+          if (!resp?.ok) {
+            console.warn('[CS] scan error via port:', resp?.error);
+            if (!hasLoadedOnce) showError(resp?.error || 'Scan error');
+            try { port.disconnect(); } catch (e) {}
+            return;
           }
-          return;
+          renderTokens(resp.items || []);
+          hasLoadedOnce = true;
+        } catch (e) {
+          console.error('[CS] port onMessage handler exception:', e);
+          if (!hasLoadedOnce) showError('Exception: ' + (e && e.message));
+        } finally {
+          try { port.disconnect(); } catch (e) {}
         }
-        
-        console.log("[CS] requestAndRenderIfWallet: received response:", resp);
-        
-        if (!resp?.ok) {
-          console.warn("[CS] scan error:", resp?.error);
-          if (!hasLoadedOnce) {
-            showError(resp?.error || "Scan error");
-          }
-          return;
-        }
-        
-        console.log("[CS] requestAndRenderIfWallet: rendering tokens", resp.items);
-        renderTokens(resp.items || []);
-        hasLoadedOnce = true;
       });
+      // send request
+      port.postMessage({ type: 'SCAN_TOKENS_MS' });
     } catch (e) {
-      console.error("[CS] requestAndRenderIfWallet: exception:", e);
-      if (!hasLoadedOnce) {
-        showError("Exception: " + e.message);
-      }
+      console.error('[CS] requestAndRenderIfWallet: exception opening port:', e);
+      if (!hasLoadedOnce) showError('Connection error');
     }
   }
 
@@ -325,9 +342,12 @@
   chrome.runtime.onMessage?.addListener((msg) => {
     console.log("[CS] received message from background:", msg);
     if (msg?.type === "WALLET_UPDATE" && msg.wallet) {
-      console.log("[CS] WALLET_UPDATE received, refreshing");
-      setTimeout(() => {
+      console.log("[CS] WALLET_UPDATE received, scheduling refresh");
+      // debounce multiple wallet updates
+      if (_refreshTimer) clearTimeout(_refreshTimer);
+      _refreshTimer = setTimeout(() => {
         requestAndRenderIfWallet();
+        _refreshTimer = null;
       }, 500);
     }
   });

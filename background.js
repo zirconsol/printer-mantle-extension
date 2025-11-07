@@ -42,13 +42,33 @@ function trySaveWalletFromUrl(rawUrl, phase) {
     console.log("[BG] " + phase + ": hit " + url.pathname, { wallet: wallet, networkId: networkId });
 
     if (wallet && /^0x[a-fA-F0-9]{40}$/i.test(wallet)) {
-      chrome.storage.session.set({
-        printrWallet: wallet,
-        printrNetworkId: networkId || null,
-        printrWalletDetectedAt: Date.now()
-      });
-      console.log("[BG] wallet saved:", wallet, "network:", networkId || null);
-      broadcastWalletToTabs(wallet, networkId);
+      // Only save + broadcast if the stored wallet is different (debounce duplicate webRequest events)
+      try {
+        chrome.storage.session.get(["printrWallet", "printrNetworkId"], function(stored) {
+          var existing = stored && stored.printrWallet;
+          var existingNet = stored && stored.printrNetworkId;
+          if (!existing || existing.toLowerCase() !== wallet.toLowerCase() || String(existingNet) !== String(networkId || null)) {
+            chrome.storage.session.set({
+              printrWallet: wallet,
+              printrNetworkId: networkId || null,
+              printrWalletDetectedAt: Date.now()
+            });
+            console.log("[BG] wallet saved:", wallet, "network:", networkId || null);
+            broadcastWalletToTabs(wallet, networkId);
+          } else {
+            // duplicate detection: don't broadcast again
+            console.log("[BG] wallet already stored, skipping broadcast");
+          }
+        });
+      } catch (err) {
+        // fallback: attempt to set directly
+        chrome.storage.session.set({
+          printrWallet: wallet,
+          printrNetworkId: networkId || null,
+          printrWalletDetectedAt: Date.now()
+        });
+        broadcastWalletToTabs(wallet, networkId);
+      }
       return true;
     }
     return false;
@@ -231,6 +251,28 @@ async function getTokenPrice(contractAddress) {
   }
 }
 
+// Simple cached MNT->USD price (CoinGecko) to convert entry MNT prices to USD
+var _cachedMntUsd = { ts: 0, value: null };
+async function getMntUsdPrice() {
+  try {
+    var now = Date.now();
+    if (_cachedMntUsd.value != null && now - _cachedMntUsd.ts < 60 * 1000) {
+      return _cachedMntUsd.value;
+    }
+    var url = 'https://api.coingecko.com/api/v3/simple/price?ids=mantle&vs_currencies=usd';
+    var r = await fetch(url, { method: 'GET' });
+    if (!r.ok) return null;
+    var j = await r.json().catch(function() { return null; });
+    if (!j || !j.mantle || !j.mantle.usd) return null;
+    var v = Number(j.mantle.usd);
+    if (isNaN(v)) return null;
+    _cachedMntUsd = { ts: now, value: v };
+    return v;
+  } catch (e) {
+    return null;
+  }
+}
+
 async function mantleScanTokenContracts(wallet) {
   var url = MS_API + "?module=account&action=tokentx&address=" + wallet + "&startblock=0&endblock=999999999&sort=asc";
   var r = await fetch(url, { method: "GET" });
@@ -250,6 +292,153 @@ async function mantleScanTokenContracts(wallet) {
     if (ca && /^0x[0-9a-f]{40}$/.test(ca)) set.add(ca);
   }
   return Array.from(set);
+}
+
+// Obtener compras (buys) para un token hacia la wallet usando MantleScan: sumar native value de la tx
+async function mantleGetBuysForToken(wallet, token, decimals) {
+  try {
+    var url = MS_API + "?module=account&action=tokentx&address=" + wallet + "&contractaddress=" + token + "&startblock=0&endblock=999999999&sort=asc";
+    var r = await fetch(url, { method: "GET" });
+    if (!r.ok) {
+      console.warn('[BG] mantleGetBuysForToken: MantleScan tokentx fetch not ok', r.status);
+      return null;
+    }
+    var j = await r.json().catch(function() { return null; });
+    if (!j || j.status !== "1" || !Array.isArray(j.result)) {
+      console.log('[BG] mantleGetBuysForToken: no tokentx result or empty', j);
+      return null;
+    }
+    console.log('[BG] mantleGetBuysForToken: tokentx count', j.result.length, 'for', token, 'wallet', wallet);
+
+    var sumTokensRaw = 0n;
+    var sumMntRaw = 0n;
+    var buys = 0;
+
+  // cache for symbol lookups
+    var symbolCache = {};
+    var TRANSFER_TOPIC = '0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef';
+    var walletLower = wallet.toLowerCase();
+    var walletTopic = pad32(walletLower).toLowerCase();
+  // RPC used to resolve ERC20 symbol when needed
+  var rpcUrl = DEFAULT_RPC;
+
+    for (var i = 0; i < j.result.length; i++) {
+      var tx = j.result[i];
+      var to = (tx.to || '').toLowerCase();
+      if (to !== walletLower) continue; // only incoming transfers for this token
+
+      // token amount (raw) from tokentx result
+      try {
+        var tokenValRaw = BigInt(tx.value || tx.tokenValue || tx.contractValue || '0');
+      } catch (e) {
+        try { tokenValRaw = BigInt(tx.tokenDecimal ? String(tx.value) : '0'); } catch (e2) { tokenValRaw = 0n; }
+      }
+      if (tokenValRaw <= 0n) continue;
+      var txhash = tx.hash || tx.transactionHash || tx.txhash || tx.txHash;
+      console.log('[BG] mantleGetBuysForToken: incoming tokentx', { token: token, txhash: txhash, tokenValRaw: tokenValRaw.toString() });
+
+      // fetch transaction receipt to inspect logs for WMNT (or other ERC20) transfers from the wallet
+      try {
+        var txhash = tx.hash || tx.transactionHash || tx.txhash;
+        if (!txhash) continue;
+        var receiptUrl = MS_API + "?module=proxy&action=eth_getTransactionReceipt&txhash=" + txhash;
+        // use direct RPC to fetch receipt to avoid explorer proxy limits
+        var receipt = null;
+        try {
+          receipt = await rpc(DEFAULT_RPC, 'eth_getTransactionReceipt', [txhash]);
+        } catch (e) {
+          console.log('[BG] mantleGetBuysForToken: rpc eth_getTransactionReceipt failed for', txhash, e && e.message);
+          continue;
+        }
+        if (!receipt || !Array.isArray(receipt.logs)) {
+          console.log('[BG] mantleGetBuysForToken: no receipt.logs for tx', txhash, receipt);
+          continue;
+        }
+        console.log('[BG] mantleGetBuysForToken: receipt logs length', receipt.logs.length, 'for tx', txhash);
+        if (receipt.logs.length > 0) {
+          try {
+            var firstLog = receipt.logs[0];
+            console.log('[BG] mantleGetBuysForToken: receipt first log sample', { address: firstLog.address, topics0: firstLog.topics && firstLog.topics[0], data: String(firstLog.data).slice(0, 66) });
+          } catch (e) { }
+        }
+
+        // look for any Transfer logs in the same receipt where 'from' == wallet and address != token
+        var mntFound = false;
+        for (var li = 0; li < receipt.logs.length; li++) {
+          var lg = receipt.logs[li];
+          if (!lg || !lg.topics || !lg.topics[0]) continue;
+          if (lg.topics[0].toLowerCase() !== TRANSFER_TOPIC) continue;
+
+          var fromTopic = (lg.topics[1] || '').toLowerCase();
+          var toTopic = (lg.topics[2] || '').toLowerCase();
+          var logAddr = (lg.address || '').toLowerCase();
+          console.log('[BG] mantleGetBuysForToken: inspecting log', { logAddr: logAddr, fromTopic: fromTopic, toTopic: toTopic });
+
+          // if this log represents the token transfer to wallet we are already processing, skip
+          if (logAddr === token.toLowerCase() && toTopic === walletTopic) continue;
+
+          // if wallet was sender of some other ERC20 in this tx, consider it payment
+          if (fromTopic === walletTopic && logAddr !== token.toLowerCase()) {
+            // amount raw is in lg.data
+            var otherAmtRaw = BigInt(lg.data || '0x0');
+
+            // try to resolve symbol (cache)
+            var sym = symbolCache[logAddr];
+            if (sym === undefined) {
+              try {
+                sym = await erc20_symbol(rpcUrl, logAddr).catch(function() { return null; });
+                if (!sym) console.log('[BG] mantleGetBuysForToken: symbol lookup returned null for', logAddr);
+              } catch (e) { sym = null; console.log('[BG] mantleGetBuysForToken: symbol lookup error for', logAddr, e && e.message); }
+              symbolCache[logAddr] = sym;
+            }
+
+            // if the other token is WMNT (wrapped MNT), treat its amount as MNT spent
+            if (sym && (sym || '').toUpperCase() === 'WMNT') {
+              sumTokensRaw += tokenValRaw;
+              sumMntRaw += otherAmtRaw;
+              buys++;
+              mntFound = true;
+              console.log('[BG] mantleGetBuysForToken: detected WMNT payment', { token: token, tx: txhash, otherAddr: logAddr, otherAmtRaw: otherAmtRaw.toString() });
+              break; // stop scanning logs for this tx
+            }
+          }
+        }
+
+        // fallback: if no WMNT transfer found, also check native tx value (some swaps may include native value)
+        if (!mntFound) {
+          try {
+            // use RPC eth_getTransactionByHash to get native value
+            var txres = await rpc(DEFAULT_RPC, 'eth_getTransactionByHash', [txhash]);
+            if (txres) {
+              var mntRawHex = txres.value || '0x0';
+              var mntRaw = BigInt(mntRawHex);
+              if (mntRaw > 0n) {
+                sumTokensRaw += tokenValRaw;
+                sumMntRaw += mntRaw;
+                buys++;
+                console.log('[BG] mantleGetBuysForToken: detected native MNT payment', { token: token, tx: txhash, mntRaw: mntRaw.toString() });
+              }
+            }
+          } catch (e) {
+            // ignore rpc errors for this tx
+          }
+        }
+      } catch (e) {
+        continue;
+      }
+    }
+
+    if (sumTokensRaw === 0n || sumMntRaw === 0n) return { buys: buys, totalTokensRaw: sumTokensRaw.toString(), totalMntRaw: sumMntRaw.toString(), entryPriceMNT: null };
+
+    // compute weighted average price in MNT per token
+    var totalTokens = Number(sumTokensRaw) / Math.pow(10, decimals);
+    var totalMnt = Number(sumMntRaw) / 1e18;
+    var entryPriceMNT = totalMnt / totalTokens;
+
+    return { buys: buys, totalTokensRaw: sumTokensRaw.toString(), totalMntRaw: sumMntRaw.toString(), entryPriceMNT: entryPriceMNT };
+  } catch (e) {
+    return null;
+  }
 }
 
 async function scanBalancesFromWalletStored() {
@@ -296,8 +485,52 @@ async function scanBalancesFromWalletStored() {
         formattedUSD = formatUSD(valueUSD);
         change24 = priceData.change24;
       }
-
       var tokenId = TOKEN_ID_MAP[token];
+
+      // Obtener precio de entrada (weighted) basado en compras hacia la wallet
+      var entryInfo = null;
+      try {
+        entryInfo = await mantleGetBuysForToken(wallet, token, dec);
+      } catch (e) {
+        entryInfo = null;
+      }
+
+      var entryPriceMNT = entryInfo && entryInfo.entryPriceMNT ? entryInfo.entryPriceMNT : null;
+      var entryBuysCount = entryInfo && typeof entryInfo.buys === 'number' ? entryInfo.buys : 0;
+      // compute PnL in USD/percent if possible
+      var pnlPct = null;
+      var pnlUSD = null;
+      var currentPriceUSD = priceData && priceData.priceUSD ? priceData.priceUSD : null;
+      var mntUsd = null;
+      try {
+        if (entryPriceMNT != null && currentPriceUSD != null) {
+          // fetch MNT->USD price (cached)
+          mntUsd = await getMntUsdPrice();
+          if (mntUsd && typeof mntUsd === 'number' && mntUsd > 0) {
+            var entryPriceUSD = entryPriceMNT * mntUsd;
+            if (entryPriceUSD > 0) {
+              pnlPct = (currentPriceUSD / entryPriceUSD - 1) * 100;
+              pnlUSD = (currentPriceUSD - entryPriceUSD) * balNum;
+            }
+          }
+        }
+      } catch (e) {
+        // ignore
+      }
+
+      // debug log token PnL computation
+      try {
+        console.log('[BG] token PNL debug', {
+          token: token,
+          symbol: sym,
+          entryPriceMNT: entryPriceMNT,
+          currentPriceUSD: currentPriceUSD,
+          mntUsd: mntUsd,
+          pnlPct: pnlPct,
+          pnlUSD: pnlUSD,
+          entryInfo: entryInfo
+        });
+      } catch (e) { /* ignore logging errors */ }
       out.push({
         address: token,
         symbol: sym || "TOKEN",
@@ -308,7 +541,12 @@ async function scanBalancesFromWalletStored() {
         valueUSD: valueUSD,
         formattedUSD: formattedUSD,
         change24: change24,
-        tokenId: tokenId
+        tokenId: tokenId,
+        entryPriceMNT: entryPriceMNT,
+        entryBuys: entryBuysCount
+        ,pnlPct: pnlPct,
+        pnlUSD: pnlUSD,
+        currentPriceUSD: currentPriceUSD
       });
     } catch (e) {
       // ignorar contratos invalidos
@@ -348,4 +586,33 @@ chrome.runtime.onMessage.addListener(function(msg, sender, sendResponse) {
     })();
     return true;
   }
+});
+
+// Support long-lived port for scanning (keeps service worker alive during long operations)
+chrome.runtime.onConnect.addListener(function(port) {
+  if (!port || port.name !== 'scan-port') return;
+  console.log('[BG] port connected:', port.name);
+  port.onMessage.addListener(async function(msg) {
+    try {
+      if (msg && msg.type === 'SCAN_TOKENS_MS') {
+        console.log('[BG] port: requested SCAN_TOKENS_MS');
+        try {
+          var t0 = performance.now();
+          var items = await scanBalancesFromWalletStored();
+          var t1 = performance.now();
+          console.log('[BG] port SCAN_TOKENS_MS done', { count: items.length, ms: Math.round(t1 - t0) });
+          port.postMessage({ ok: true, items: items });
+        } catch (e) {
+          console.warn('[BG] port SCAN_TOKENS_MS error:', e && e.message ? e.message : e);
+          port.postMessage({ ok: false, error: String(e && e.message ? e.message : e) });
+        }
+        // close the port when done
+        try { port.disconnect(); } catch (e) { /* ignore */ }
+      }
+    } catch (err) {
+      console.warn('[BG] port message handler error:', err);
+      try { port.postMessage({ ok: false, error: String(err) }); } catch (e) {}
+      try { port.disconnect(); } catch (e) {}
+    }
+  });
 });
