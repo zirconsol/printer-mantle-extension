@@ -497,6 +497,30 @@ async function scanBalancesFromWalletStored() {
 
       var entryPriceMNT = entryInfo && entryInfo.entryPriceMNT ? entryInfo.entryPriceMNT : null;
       var entryBuysCount = entryInfo && typeof entryInfo.buys === 'number' ? entryInfo.buys : 0;
+      // totals from buys
+      var boughtTokensRaw = entryInfo && entryInfo.totalTokensRaw ? String(entryInfo.totalTokensRaw) : null;
+      var boughtMntRaw = entryInfo && entryInfo.totalMntRaw ? String(entryInfo.totalMntRaw) : null;
+      var formattedBoughtTokens = null;
+      var formattedBoughtMNT = null;
+      var boughtUSD = null;
+      var formattedBoughtUSD = null;
+      try {
+        if (boughtTokensRaw) {
+          formattedBoughtTokens = formatTokenAmount(boughtTokensRaw, dec);
+        }
+        if (boughtMntRaw) {
+          // format MNT amount as token with 18 decimals
+          formattedBoughtMNT = formatTokenAmount(boughtMntRaw, 18) + ' MNT';
+          var totalMntNum = Number(BigInt(boughtMntRaw)) / 1e18;
+          var mntUsd2 = await getMntUsdPrice();
+          if (mntUsd2) {
+            boughtUSD = totalMntNum * mntUsd2;
+            formattedBoughtUSD = formatUSD(boughtUSD);
+          }
+        }
+      } catch (e) {
+        // ignore formatting errors
+      }
       // compute PnL in USD/percent if possible
       var pnlPct = null;
       var pnlUSD = null;
@@ -543,7 +567,13 @@ async function scanBalancesFromWalletStored() {
         change24: change24,
         tokenId: tokenId,
         entryPriceMNT: entryPriceMNT,
-        entryBuys: entryBuysCount
+        entryBuys: entryBuysCount,
+        boughtTokensRaw: boughtTokensRaw,
+        formattedBoughtTokens: formattedBoughtTokens,
+        boughtMntRaw: boughtMntRaw,
+        formattedBoughtMNT: formattedBoughtMNT,
+        boughtUSD: boughtUSD,
+        formattedBoughtUSD: formattedBoughtUSD
         ,pnlPct: pnlPct,
         pnlUSD: pnlUSD,
         currentPriceUSD: currentPriceUSD

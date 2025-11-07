@@ -15,7 +15,7 @@
   "content_scripts": [
     {
       "matches": ["https://app.printr.money/*"],
-      "js": ["content.js"],
+      "js": ["content.js", "content-summary.js"],
       "run_at": "document_idle"
     }
   ],
