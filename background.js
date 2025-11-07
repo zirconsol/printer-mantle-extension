@@ -2,6 +2,13 @@
 const DEFAULT_RPC = "https://mantle-rpc.publicnode.com";
 const PRINTR_WALLET_ENDPOINT = "/api/getWalletBalances";
 const MS_API = "https://explorer.mantle.xyz/api";
+const PRINTR_API = "https://app.printr.money/api";
+
+// Token ID mapping (contract address -> Printr token ID)
+const TOKEN_ID_MAP = {
+  "0x375450706cb79ab749ebb90001bda10341dd82bc": "0x57a02b3daa88adffcd720f122feb2567765d89bba832b933edd5ac7cce434980", // BILLI
+  "0x4f605d24ab0be4dc5bc6837a59869537f66f947a": "0x471b96c034047ef9d98ec584855c37ecfd44d7d057e2c4366a50b6147fd50a91"  // MOMNTUM
+};
 
 // ========= Logs de arranque =========
 console.log("[BG] boot: service worker evaluated");
@@ -149,6 +156,66 @@ function formatTokenAmount(rawBalance, decimals) {
   }
 }
 
+// ========= Formatear USD =========
+function formatUSD(value) {
+  try {
+    const num = Number(value);
+    if (isNaN(num) || num === 0) return "$0.00";
+    
+    if (num >= 1000000) {
+      return "$" + (num / 1000000).toFixed(2) + "M";
+    } else if (num >= 1000) {
+      return "$" + (num / 1000).toFixed(2) + "k";
+    } else if (num >= 1) {
+      return "$" + num.toFixed(2);
+    } else {
+      return "$" + num.toFixed(4);
+    }
+  } catch (e) {
+    console.warn("[BG] formatUSD error:", e);
+    return "$0.00";
+  }
+}
+
+// ========= Obtener precio de token desde Printr API =========
+async function getTokenPrice(contractAddress) {
+  try {
+    const tokenId = TOKEN_ID_MAP[contractAddress.toLowerCase()];
+    if (!tokenId) {
+      console.log("[BG] No token ID mapping for:", contractAddress);
+      return null;
+    }
+    
+    const url = PRINTR_API + "/getToken/" + tokenId;
+    const r = await fetch(url, { method: "GET" });
+    
+    if (!r.ok) {
+      console.warn("[BG] Printr API not ok:", r.status, "for", contractAddress);
+      return null;
+    }
+    
+    const data = await r.json();
+    
+    // Buscar el deployment de Mantle (chainId: eip155:5000)
+    const deployment = data.deployments && data.deployments.find(function(d) {
+      return d.chainId === "eip155:5000";
+    });
+    
+    if (deployment && deployment.priceUSD) {
+      console.log("[BG] Price for", data.symbol, ":", deployment.priceUSD);
+      return {
+        priceUSD: deployment.priceUSD,
+        change24: deployment.change24 || 0
+      };
+    }
+    
+    return null;
+  } catch (e) {
+    console.warn("[BG] getTokenPrice error:", e && e.message ? e.message : e);
+    return null;
+  }
+}
+
 // ========= MantleScan: enumerar contratos ERC-20 por actividad =========
 async function mantleScanTokenContracts(wallet) {
   const url = `${MS_API}?module=account&action=tokentx&address=${wallet}&startblock=0&endblock=999999999&sort=asc`;
@@ -203,6 +270,21 @@ async function scanBalancesFromWalletStored() {
       if (symbolUp === "MNT") continue;
 
       const formattedBalance = formatTokenAmount(bal.toString(), dec);
+      
+      // Calcular balance numerico para USD
+      const balNum = Number(bal) / Math.pow(10, dec);
+      
+      // Obtener precio y calcular valor en USD
+      const priceData = await getTokenPrice(token);
+      let valueUSD = null;
+      let formattedUSD = null;
+      let change24 = null;
+      
+      if (priceData && priceData.priceUSD) {
+        valueUSD = balNum * priceData.priceUSD;
+        formattedUSD = formatUSD(valueUSD);
+        change24 = priceData.change24;
+      }
 
       out.push({
         address: token,
@@ -210,7 +292,10 @@ async function scanBalancesFromWalletStored() {
         name: name || sym || "Token",
         decimals: dec,
         rawBalance: bal.toString(),
-        formattedBalance: formattedBalance
+        formattedBalance: formattedBalance,
+        valueUSD: valueUSD,
+        formattedUSD: formattedUSD,
+        change24: change24
       });
     } catch (e) {
       // ignorar contratos invalidos

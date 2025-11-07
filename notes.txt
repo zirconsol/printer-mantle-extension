@@ -1,0 +1,9 @@
+REVISAR QUE BILLI OBTIENE BIEN EL VALOR EN USD PERO MOMNTUM NO.
+
+INCORPORAR TOKENS DESDE tokens.json
+
+USAR tokens.json para rescatar los IDS y redireccionar los links nuevos
+
+Se puede obtener los tokens haciendo esta peticion
+https://app.printr.money/api/getMarketplaceTokens?sort=by-newly-created&chains=eip155%3A5000&page=1&pageSize=20&query=&sortOrder=DESC
+

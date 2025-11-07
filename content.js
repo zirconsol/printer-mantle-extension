@@ -161,11 +161,29 @@
 
       const val = document.createElement("span");
       val.className = "val";
-      val.textContent = t.formattedBalance || "0";
+      // Priorizar USD, si no hay mostrar cantidad
+      if (t.formattedUSD) {
+        val.textContent = t.formattedUSD;
+      } else {
+        val.textContent = t.formattedBalance || "0";
+      }
+      
+      console.log("[CS] Token:", t.symbol, "formattedUSD:", t.formattedUSD, "formattedBalance:", t.formattedBalance);
 
       const pct = document.createElement("span");
       pct.className = "pct";
-      pct.textContent = "+4.25%";
+      // Mostrar cambio real de 24h si esta disponible
+      if (t.change24 !== null && t.change24 !== undefined) {
+        const change = t.change24 * 100;
+        const sign = change >= 0 ? "+" : "";
+        pct.textContent = sign + change.toFixed(2) + "%";
+        // Cambiar color segun si es positivo o negativo
+        if (change < 0) {
+          pct.style.color = "rgb(239,68,68)"; // rojo
+        }
+      } else {
+        pct.textContent = "+4.25%";
+      }
 
       const item = document.createElement("div");
       item.className = "item";
