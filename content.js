@@ -1,5 +1,6 @@
-(() => {
+(function() {
   const WID = "printr-mini-pnl-banner";
+  let hasLoadedOnce = false;
   
   console.log("[CS] content script loaded");
 
@@ -141,7 +142,7 @@
       return;
     }
 
-    row.textContent = ""; // clear
+    row.textContent = "";
     if (!tokens || tokens.length === 0) {
       const span = document.createElement("span");
       span.className = "val";
@@ -160,7 +161,7 @@
 
       const val = document.createElement("span");
       val.className = "val";
-      val.textContent = "$20.42";
+      val.textContent = t.formattedBalance || "0";
 
       const pct = document.createElement("span");
       pct.className = "pct";
@@ -187,7 +188,7 @@
     row.textContent = "";
     const span = document.createElement("span");
     span.className = "val";
-    span.textContent = "Loading tokens…";
+    span.textContent = "Loading tokens...";
     row.appendChild(span);
   }
 
@@ -207,7 +208,6 @@
   async function requestAndRenderIfWallet() {
     console.log("[CS] requestAndRenderIfWallet: starting");
     
-    // asegurar banner con timeout más largo
     let tries = 0;
     while (!ensureBanner() && tries < 50) {
       await new Promise((r) => setTimeout(r, 200));
@@ -221,17 +221,19 @@
 
     console.log("[CS] requestAndRenderIfWallet: banner ready, requesting wallet from background");
 
-    showLoading();
+    if (!hasLoadedOnce) {
+      showLoading();
+    }
 
-    // En lugar de leer storage.session directamente (que no funciona en content scripts),
-    // pedimos al background que nos dé la wallet Y escanee los tokens en una sola llamada
     console.log("[CS] requestAndRenderIfWallet: sending SCAN_TOKENS_MS message to background");
     
     try {
       chrome.runtime.sendMessage({ type: "SCAN_TOKENS_MS" }, (resp) => {
         if (chrome.runtime.lastError) {
           console.error("[CS] sendMessage error:", chrome.runtime.lastError.message);
-          showError("Connection error");
+          if (!hasLoadedOnce) {
+            showError("Connection error");
+          }
           return;
         }
         
@@ -239,13 +241,13 @@
         
         if (!resp?.ok) {
           console.warn("[CS] scan error:", resp?.error);
-          showError(resp?.error || "Scan error");
+          if (!hasLoadedOnce) {
+            showError(resp?.error || "Scan error");
+          }
           return;
         }
         
-        // Si hay items, significa que hay wallet
         if (resp.items && resp.items.length >= 0) {
-          // Pedir la wallet para mostrarla en el badge
           chrome.runtime.sendMessage({ type: "GET_WALLET" }, (walletResp) => {
             if (walletResp?.wallet) {
               setWalletBadge(walletResp.wallet);
@@ -255,10 +257,13 @@
         
         console.log("[CS] requestAndRenderIfWallet: rendering tokens", resp.items);
         renderTokens(resp.items || []);
+        hasLoadedOnce = true;
       });
     } catch (e) {
       console.error("[CS] requestAndRenderIfWallet: exception:", e);
-      showError("Exception: " + e.message);
+      if (!hasLoadedOnce) {
+        showError("Exception: " + e.message);
+      }
     }
   }
 
@@ -272,18 +277,26 @@
   });
   mo.observe(document.documentElement, { childList: true, subtree: true });
 
-  const origPush = history.pushState, origReplace = history.replaceState;
+  const origPush = history.pushState;
+  const origReplace = history.replaceState;
   const trig = () => {
     console.log("[CS] navigation detected, ensuring banner");
     queueMicrotask(() => {
       ensureBanner();
-      // Trigger scan after navigation
       setTimeout(() => requestAndRenderIfWallet(), 1000);
     });
   };
   
-  history.pushState = function () { const r = origPush.apply(this, arguments); trig(); return r; };
-  history.replaceState = function () { const r = origReplace.apply(this, arguments); trig(); return r; };
+  history.pushState = function () { 
+    const r = origPush.apply(this, arguments); 
+    trig(); 
+    return r; 
+  };
+  history.replaceState = function () { 
+    const r = origReplace.apply(this, arguments); 
+    trig(); 
+    return r; 
+  };
   window.addEventListener("popstate", trig);
 
   if (document.readyState === "loading") {
@@ -299,7 +312,6 @@
     setTimeout(() => requestAndRenderIfWallet(), 500);
   }
 
-  // Cuando BG detecta/actualiza la wallet, refrescar
   chrome.runtime.onMessage?.addListener((msg) => {
     console.log("[CS] received message from background:", msg);
     if (msg?.type === "WALLET_UPDATE" && msg.wallet) {

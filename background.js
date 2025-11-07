@@ -1,6 +1,6 @@
 // ========= Config =========
 const DEFAULT_RPC = "https://mantle-rpc.publicnode.com";
-const PRINTR_WALLET_ENDPOINT = "/api/getWalletBalances"; // para sniff
+const PRINTR_WALLET_ENDPOINT = "/api/getWalletBalances";
 const MS_API = "https://explorer.mantle.xyz/api";
 
 // ========= Logs de arranque =========
@@ -56,7 +56,7 @@ chrome.webRequest.onCompleted.addListener(
   { urls: ["https://app.printr.money/*"] }
 );
 
-// ========= Helpers JSON-RPC (sin ethers) =========
+// ========= Helpers JSON-RPC =========
 async function rpc(rpcUrl, method, params = []) {
   const r = await fetch(rpcUrl, {
     method: "POST",
@@ -70,10 +70,10 @@ async function rpc(rpcUrl, method, params = []) {
 const pad32 = (hex) => "0x" + hex.replace(/^0x/, "").padStart(64, "0").toLowerCase();
 
 // ABI selectors
-const SEL_DECIMALS   = "0x313ce567"; // decimals()
-const SEL_SYMBOL     = "0x95d89b41"; // symbol()
-const SEL_NAME       = "0x06fdde03"; // name()
-const SEL_BALANCEOF  = "0x70a08231"; // balanceOf(address)
+const SEL_DECIMALS   = "0x313ce567";
+const SEL_SYMBOL     = "0x95d89b41";
+const SEL_NAME       = "0x06fdde03";
+const SEL_BALANCEOF  = "0x70a08231";
 
 // eth_call helper
 async function eth_call(rpcUrl, to, data) {
@@ -83,7 +83,7 @@ async function eth_call(rpcUrl, to, data) {
 function hexToAsciiMaybe(hex) {
   try {
     const clean = hex.replace(/^0x/, "");
-    if (clean.length < 128) return null; // demasiado corto para string ABI
+    if (clean.length < 128) return null;
     const lenHex = "0x" + clean.slice(64, 128);
     const len = Number(BigInt(lenHex));
     const dataStart = 128;
@@ -121,6 +121,34 @@ async function erc20_balanceOf(rpcUrl, token, wallet) {
   } catch { return 0n; }
 }
 
+// ========= Formatear cantidad =========
+function formatTokenAmount(rawBalance, decimals) {
+  try {
+    const bal = BigInt(rawBalance);
+    const divisor = BigInt(10) ** BigInt(decimals);
+    const wholePart = bal / divisor;
+    const fracPart = bal % divisor;
+    
+    const wholeNum = Number(wholePart);
+    const fracNum = Number(fracPart) / Number(divisor);
+    const total = wholeNum + fracNum;
+    
+    if (total >= 1000000) {
+      return (total / 1000000).toFixed(2) + "M";
+    } else if (total >= 1000) {
+      return (total / 1000).toFixed(2) + "k";
+    } else if (total >= 1) {
+      return total.toFixed(2);
+    } else if (total > 0) {
+      return total.toFixed(4);
+    }
+    return "0";
+  } catch (e) {
+    console.warn("[BG] formatTokenAmount error:", e);
+    return "0";
+  }
+}
+
 // ========= MantleScan: enumerar contratos ERC-20 por actividad =========
 async function mantleScanTokenContracts(wallet) {
   const url = `${MS_API}?module=account&action=tokentx&address=${wallet}&startblock=0&endblock=999999999&sort=asc`;
@@ -142,7 +170,7 @@ async function mantleScanTokenContracts(wallet) {
   return [...set];
 }
 
-// ========= Scan balances (excluye MNT) =========
+// ========= Scan balances =========
 async function scanBalancesFromWalletStored() {
   const { printrWallet } = await chrome.storage.session.get(["printrWallet"]);
   if (!printrWallet || !/^0x[a-fA-F0-9]{40}$/i.test(printrWallet)) {
@@ -153,13 +181,11 @@ async function scanBalancesFromWalletStored() {
 
   console.log("[BG] scan via MantleScan for wallet:", wallet);
 
-  // 1) Enumerar contratos únicos con actividad ERC-20
   const tokenAddresses = await mantleScanTokenContracts(wallet);
   if (!tokenAddresses.length) {
     return [];
   }
 
-  // 2) Para cada contrato, consultar balance + metadata
   const out = [];
   for (let i = 0; i < tokenAddresses.length; i++) {
     const token = tokenAddresses[i];
@@ -174,28 +200,29 @@ async function scanBalancesFromWalletStored() {
       ]);
 
       const symbolUp = (sym || "").toUpperCase();
-      // *** EXCLUSIÓN: MNT nativo no viene como ERC-20; por las dudas filtramos símbolos MNT también.
       if (symbolUp === "MNT") continue;
+
+      const formattedBalance = formatTokenAmount(bal.toString(), dec);
 
       out.push({
         address: token,
         symbol: sym || "TOKEN",
         name: name || sym || "Token",
         decimals: dec,
-        rawBalance: bal.toString()
+        rawBalance: bal.toString(),
+        formattedBalance: formattedBalance
       });
     } catch (e) {
-      // ignorar contratos inválidos
+      // ignorar contratos invalidos
     }
 
-    // micro pausita para no saturar
     await new Promise((r) => setTimeout(r, 80));
   }
 
   return out;
 }
 
-// ========= Mensajería: content -> background =========
+// ========= Mensajeria: content -> background =========
 chrome.runtime.onMessage.addListener((msg, _sender, sendResponse) => {
   if (msg?.type === "SCAN_TOKENS_MS") {
     (async () => {
@@ -210,6 +237,18 @@ chrome.runtime.onMessage.addListener((msg, _sender, sendResponse) => {
         sendResponse({ ok: false, error: String(e?.message || e) });
       }
     })();
-    return true; // async
+    return true;
+  }
+  
+  if (msg?.type === "GET_WALLET") {
+    (async () => {
+      try {
+        const { printrWallet } = await chrome.storage.session.get(["printrWallet"]);
+        sendResponse({ ok: true, wallet: printrWallet || null });
+      } catch (e) {
+        sendResponse({ ok: false, error: String(e?.message || e) });
+      }
+    })();
+    return true;
   }
 });

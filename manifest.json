@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Printr – Entry Metrics",
-  "version": "1.4.0",
+  "version": "1.4.1",
   "description": "Muestra tokens con balance de la wallet + info hardcodeada.",
   "permissions": ["storage", "webRequest"],
   "host_permissions": [
@@ -9,7 +9,9 @@
     "https://mantle-rpc.publicnode.com/*",
     "https://explorer.mantle.xyz/api/*"
   ],
-  "background": { "service_worker": "background.js", "type": "module" },
+  "background": { 
+    "service_worker": "background.js"
+  },
   "content_scripts": [
     {
       "matches": ["https://app.printr.money/*"],
