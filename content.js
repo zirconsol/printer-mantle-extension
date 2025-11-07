@@ -51,14 +51,14 @@
     style.textContent = `
       .wrap {
         font-family: "PP Monument Extended", ui-sans-serif, system-ui, sans-serif;
-        font-weight: 700;
+        font-weight: 400;
         letter-spacing: 0.3px;
         display: flex;
         align-items: center;
-        gap: 10px;
+        gap: 6px;
         margin-left: auto;
         max-width: 100%;
-        padding-right: 16px;
+        padding-right: 8px;
         background: transparent !important;
         border: none !important;
         box-shadow: none !important;
@@ -68,21 +68,19 @@
         justify-content: flex-end; width: 100%;
       }
       .item {
-        display: inline-flex; align-items: center; gap: 8px;
+        display: inline-flex; align-items: center; gap: 4px;
         background: transparent;
       }
-      .name { color:#ffffff !important; font-weight:800; text-decoration:none; }
+      .name { color:#ffffff !important; font-weight:800; font-size:10px; text-decoration:none; }
       .name:hover{ text-decoration: underline; }
-      .val { color:#a0a0a0; opacity:1; font-weight:700; }
-      .pct { font-weight:800; font-size:12px; color:rgb(78,194,23); }
-      .wal { margin-left: 8px; color:#8b8b8b; font-weight:600; font-size:12px }
+      .val { color:#a0a0a0; opacity:1; font-weight:700; font-size:10px; }
+      .pct { font-weight:800; font-size:8px; color:rgb(78,194,23); }
     `;
 
     const body = document.createElement("div");
     body.className = "wrap";
     body.innerHTML = `
       <div class="row" id="tokensRow"></div>
-      <span id="wal" class="wal"></span>
     `;
 
     shadow.append(style, body);
@@ -103,29 +101,6 @@
     tabsBar.parentElement.insertBefore(host, tabsBar);
     console.log("[CS] ensureBanner: banner inserted successfully");
     return host;
-  }
-
-  function setWalletBadge(addr) {
-    console.log("[CS] setWalletBadge:", addr);
-    const host = document.getElementById(WID);
-    const r = host?.shadowRoot;
-    if (!r) {
-      console.log("[CS] setWalletBadge: no shadowRoot found");
-      return false;
-    }
-    const el = r.querySelector("#wal");
-    if (!el) {
-      console.log("[CS] setWalletBadge: wallet element not found");
-      return false;
-    }
-    if (addr && /^0x[a-fA-F0-9]{40}$/i.test(addr)) {
-      const compact = `${addr.slice(0, 6)}...${addr.slice(-4)}`;
-      el.textContent = `(${compact})`;
-      console.log("[CS] setWalletBadge: set to", compact);
-    } else {
-      el.textContent = "";
-    }
-    return true;
   }
 
   function renderTokens(tokens) {
@@ -155,7 +130,11 @@
     for (const t of tokens) {
       const a = document.createElement("a");
       a.className = "name";
-      a.href = "#";
+      if (t.tokenId) {
+        a.href = `https://app.printr.money/trade/${t.tokenId}?chain=mantle`;
+      } else {
+        a.href = "#";
+      }
       a.target = "_blank";
       a.textContent = t.symbol || t.name || "TOKEN";
 
@@ -265,14 +244,6 @@
           return;
         }
         
-        if (resp.items && resp.items.length >= 0) {
-          chrome.runtime.sendMessage({ type: "GET_WALLET" }, (walletResp) => {
-            if (walletResp?.wallet) {
-              setWalletBadge(walletResp.wallet);
-            }
-          });
-        }
-        
         console.log("[CS] requestAndRenderIfWallet: rendering tokens", resp.items);
         renderTokens(resp.items || []);
         hasLoadedOnce = true;
@@ -335,7 +306,6 @@
     if (msg?.type === "WALLET_UPDATE" && msg.wallet) {
       console.log("[CS] WALLET_UPDATE received, refreshing");
       setTimeout(() => {
-        setWalletBadge(msg.wallet);
         requestAndRenderIfWallet();
       }, 500);
     }

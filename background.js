@@ -297,6 +297,7 @@ async function scanBalancesFromWalletStored() {
         change24 = priceData.change24;
       }
 
+      var tokenId = TOKEN_ID_MAP[token];
       out.push({
         address: token,
         symbol: sym || "TOKEN",
@@ -306,7 +307,8 @@ async function scanBalancesFromWalletStored() {
         formattedBalance: formattedBalance,
         valueUSD: valueUSD,
         formattedUSD: formattedUSD,
-        change24: change24
+        change24: change24,
+        tokenId: tokenId
       });
     } catch (e) {
       // ignorar contratos invalidos
