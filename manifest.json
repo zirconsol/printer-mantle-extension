@@ -18,5 +18,12 @@
       "js": ["content.js"],
       "run_at": "document_idle"
     }
-  ]
+  ],
+  "web_accessible_resources": [{
+    "resources": [
+      "0x375450706cb79ab749ebb90001bda10341dd82bc.jpg",
+      "0x6e25f88171c71abc3f89494896d89cc028d1e27b.jpg"
+    ],
+    "matches": ["https://app.printr.money/*"]
+  }]
 }

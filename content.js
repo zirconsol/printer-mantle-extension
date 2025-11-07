@@ -75,6 +75,13 @@
       .name:hover{ text-decoration: underline; }
       .val { color:#a0a0a0; opacity:1; font-weight:700; font-size:10px; }
       .pct { font-weight:800; font-size:8px; color:rgb(78,194,23); }
+      .token-img {
+        width: 14px;
+        height: 14px;
+        border-radius: 50%;
+        margin-right: 4px;
+        object-fit: contain;
+      }
     `;
 
     const body = document.createElement("div");
@@ -128,6 +135,19 @@
     }
 
     for (const t of tokens) {
+      const tokenContainer = document.createElement("div");
+      tokenContainer.style.display = "inline-flex";
+      tokenContainer.style.alignItems = "center";
+
+      if (t.address) {
+        const img = document.createElement("img");
+        img.className = "token-img";
+        // Images are stored locally named by contract address (jpg)
+        img.src = chrome.runtime.getURL(`${t.address}.jpg`);
+        img.alt = t.symbol || "token";
+        tokenContainer.appendChild(img);
+      }
+
       const a = document.createElement("a");
       a.className = "name";
       if (t.tokenId) {
@@ -137,6 +157,7 @@
       }
       a.target = "_blank";
       a.textContent = t.symbol || t.name || "TOKEN";
+      tokenContainer.appendChild(a);
 
       const val = document.createElement("span");
       val.className = "val";
@@ -166,7 +187,7 @@
 
       const item = document.createElement("div");
       item.className = "item";
-      item.append(a, val, pct);
+      item.append(tokenContainer, val, pct);
 
       row.appendChild(item);
     }
