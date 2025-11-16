@@ -1,0 +1,1632 @@
+[
+  {
+    "id": "0x471b96c034047ef9d98ec584855c37ecfd44d7d057e2c4366a50b6147fd50a91",
+    "name": "MoMNTum",
+    "symbol": "MoMNTum",
+    "description": "Slogan of Mantle",
+    "imageUrl": "https://cdn.printr.money/t/0x471b96c034047ef9d98ec584855c37ecfd44d7d057e2c4366a50b6147fd50a91/media/image",
+    "chains": [
+      "eip155:5000"
+    ],
+    "payerChain": "eip155:5000",
+    "commentCount": "0",
+    "metrics": {
+      "trend": 0.219348551884851,
+      "combinedCirculatingMarketCap": 127738.823941,
+      "graduationProgressPercentage": 100,
+      "combinedHolders": 568,
+      "combinedTxnCount24": 286,
+      "combinedBuyCount24": 175,
+      "combinedSellCount24": 111,
+      "combinedVolume24": 65717,
+      "liquidity": 18906
+    },
+    "creator": "0x89499AcfeF5095812d514ba24003EaA9B9e24fEb",
+    "creatorAddressByChain": {
+      "evm": "0x89499AcfeF5095812d514ba24003EaA9B9e24fEb",
+      "svm": "",
+      "move": ""
+    },
+    "contractAddress": "0x6e25f88171c71abc3f89494896d89cc028d1e27b",
+    "contractAddressByChain": {
+      "eip155:5000": {
+        "chainId": "eip155:5000",
+        "address": "0x6e25f88171c71abc3f89494896d89cc028d1e27b"
+      }
+    },
+    "initialBuy": null,
+    "maxSupply": 1000000000,
+    "deployments": [
+      {
+        "chainId": "eip155:5000",
+        "contractAddress": "0x6e25f88171c71abc3f89494896d89cc028d1e27b",
+        "curveAddress": "0x6e25f88171c71abc3f89494896d89cc028d1e27b",
+        "transactionId": "0xa42c0520bdb60ad77cbe30ad3f8f7d5c052d86d6455c3601fe6c8ea0b7f9984c",
+        "createdAt": 1761662609474,
+        "lastTransactionTimestamp": 1762530152,
+        "state": "active",
+        "marketCap": 127739,
+        "circulatingMarketCap": 127738.823941,
+        "liquidity": 18906,
+        "codexCirculatingSupply": "1000000000",
+        "codexTotalSupply": "1000000000",
+        "change24": -0.281935490126782,
+        "change1h": 0.073408549365342,
+        "change4h": 0.219348551884851,
+        "change5m": 0,
+        "hasGraduated": true,
+        "priceUSD": 0.000127738823941,
+        "remainingLiquidityUntilGraduationPercentage": 0,
+        "volume24": 65717,
+        "holders": 568,
+        "txnCount24": 286
+      }
+    ],
+    "deploymentEstimatesByChain": {
+      "eip155:5000": 5
+    },
+    "graduationsByChain": {
+      "eip155:5000": {
+        "baseAmount": "",
+        "blockTimestamp": {
+          "seconds": "1761662598",
+          "nanos": 0
+        },
+        "chainId": "eip155:5000",
+        "createdAt": {
+          "seconds": "1761662609",
+          "nanos": 473741220
+        },
+        "tokenAmount": "",
+        "tokenId": "0x471b96c034047ef9d98ec584855c37ecfd44d7d057e2c4366a50b6147fd50a91",
+        "transactionId": ""
+      }
+    },
+    "pairAddressByChain": {
+      "eip155:5000": {
+        "chainId": "eip155:5000",
+        "address": "0x4D15656E32A65CEAAC601E1Cb4C9549dF645Cc96"
+      }
+    },
+    "externalUrlWebsite": "https://x.com/Mantle_Official/status/1970473300632707123",
+    "externalUrlTelegram": "",
+    "externalUrlX": "https://x.com/Mantle_Official/status/1965821894931919125",
+    "allChainsLinked": false,
+    "poolAddressByChain": {
+      "eip155:5000": {
+        "chainId": "eip155:5000",
+        "address": "0x4D15656E32A65CEAAC601E1Cb4C9549dF645Cc96"
+      }
+    },
+    "curveAddressByChain": {
+      "eip155:5000": {
+        "chainId": "eip155:5000",
+        "address": "0x6e25f88171c71abc3f89494896d89cc028d1e27b"
+      }
+    },
+    "isLinkedByChain": {
+
+    },
+    "xchainCreateMsgIdByDestChain": {
+
+    },
+    "xchainCreateTxIds": [],
+    "note": "getFeaturedTokens-fallback"
+  },
+  {
+    "id": "0x7e3025f2c9216a9af6a5584f40b5201fac5b1d32cead574bd6418aadd6cfa27e",
+    "name": "金馒头",
+    "symbol": "金馒头",
+    "description": "金馒头是 Mantle 生态的社区吉祥物，象征好运与财富。\r\n一口好运，发家从金馒头开始。",
+    "imageUrl": "https://cdn.printr.money/t/0x7e3025f2c9216a9af6a5584f40b5201fac5b1d32cead574bd6418aadd6cfa27e/media/image",
+    "chains": [
+      "eip155:5000"
+    ],
+    "payerChain": "eip155:5000",
+    "commentCount": "0",
+    "metrics": {
+      "trend": 0.114539032687756,
+      "combinedCirculatingMarketCap": 2031160.49313,
+      "graduationProgressPercentage": 100,
+      "combinedHolders": 705,
+      "combinedTxnCount24": 96,
+      "combinedBuyCount24": 74,
+      "combinedSellCount24": 22,
+      "combinedVolume24": 6613,
+      "liquidity": 87947
+    },
+    "creator": "0xb4da4634756eA51F4c5D36165cc767d458657358",
+    "creatorAddressByChain": {
+      "evm": "0xb4da4634756eA51F4c5D36165cc767d458657358",
+      "svm": "",
+      "move": ""
+    },
+    "contractAddress": "0x313b079d8e65d71b649c4f0089ae0df02b299af3",
+    "contractAddressByChain": {
+      "eip155:5000": {
+        "chainId": "eip155:5000",
+        "address": "0x313b079d8e65d71b649c4f0089ae0df02b299af3"
+      }
+    },
+    "initialBuy": null,
+    "maxSupply": 1000000000,
+    "deployments": [
+      {
+        "chainId": "eip155:5000",
+        "contractAddress": "0x313b079d8e65d71b649c4f0089ae0df02b299af3",
+        "curveAddress": "0x313b079d8e65d71b649c4f0089ae0df02b299af3",
+        "transactionId": "0x7c43edc980b9ca976a7aad6127f57de13e40c19625d6ca23d47b1376acb85513",
+        "createdAt": 1761542548462,
+        "lastTransactionTimestamp": 1762527760,
+        "state": "active",
+        "marketCap": 2031160,
+        "circulatingMarketCap": 2031160.49313,
+        "liquidity": 87947,
+        "codexCirculatingSupply": "1000000000",
+        "codexTotalSupply": "1000000000",
+        "change24": 0.114539032687756,
+        "change1h": 0.00960341093982819,
+        "change4h": 0.0122171910434233,
+        "change5m": 0,
+        "hasGraduated": true,
+        "priceUSD": 0.00203116049313,
+        "remainingLiquidityUntilGraduationPercentage": 0,
+        "volume24": 6613,
+        "holders": 705,
+        "txnCount24": 96
+      }
+    ],
+    "deploymentEstimatesByChain": {
+      "eip155:5000": 5
+    },
+    "graduationsByChain": {
+      "eip155:5000": {
+        "baseAmount": "",
+        "blockTimestamp": {
+          "seconds": "1761542542",
+          "nanos": 0
+        },
+        "chainId": "eip155:5000",
+        "createdAt": {
+          "seconds": "1761542548",
+          "nanos": 461157627
+        },
+        "tokenAmount": "",
+        "tokenId": "0x7e3025f2c9216a9af6a5584f40b5201fac5b1d32cead574bd6418aadd6cfa27e",
+        "transactionId": ""
+      }
+    },
+    "pairAddressByChain": {
+      "eip155:5000": {
+        "chainId": "eip155:5000",
+        "address": "0xc99042190713B455171EeA3B45912cc96205E6a2"
+      }
+    },
+    "externalUrlWebsite": "",
+    "externalUrlTelegram": "",
+    "externalUrlX": "https://x.com/Goldmantoucoin",
+    "allChainsLinked": false,
+    "poolAddressByChain": {
+      "eip155:5000": {
+        "chainId": "eip155:5000",
+        "address": "0xc99042190713B455171EeA3B45912cc96205E6a2"
+      }
+    },
+    "curveAddressByChain": {
+      "eip155:5000": {
+        "chainId": "eip155:5000",
+        "address": "0x313b079d8e65d71b649c4f0089ae0df02b299af3"
+      }
+    },
+    "isLinkedByChain": {
+
+    },
+    "xchainCreateMsgIdByDestChain": {
+
+    },
+    "xchainCreateTxIds": [],
+    "note": "getFeaturedTokens-fallback"
+  },
+  {
+    "id": "0x151ca8ac879b237faf6eeb5f53d32a6241f9a90c3567a3a1a494d13cd67b42c0",
+    "name": "fat choi",
+    "symbol": "fatchoi",
+    "description": "Official Printr Mascot.",
+    "imageUrl": "https://cdn.printr.money/t/0x151ca8ac879b237faf6eeb5f53d32a6241f9a90c3567a3a1a494d13cd67b42c0/media/image",
+    "chains": [
+      "solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp",
+      "eip155:8453",
+      "eip155:56",
+      "eip155:1"
+    ],
+    "payerChain": "solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp",
+    "commentCount": "0",
+    "metrics": {
+      "trend": 0.0131245783777005,
+      "combinedCirculatingMarketCap": 385412.151641461,
+      "graduationProgressPercentage": 100,
+      "combinedHolders": 1041,
+      "combinedTxnCount24": 24,
+      "combinedBuyCount24": 10,
+      "combinedSellCount24": 14,
+      "combinedVolume24": 2784,
+      "liquidity": 70004
+    },
+    "creator": "0x4aa879D69ff1E9EFE7e87e4D775d51D14EB6839A",
+    "creatorAddressByChain": {
+      "evm": "0x4aa879D69ff1E9EFE7e87e4D775d51D14EB6839A",
+      "svm": "itVqZ5AKm2w3UNuQ6AkAabebgQrj1rjsBoLqwCdCT1M",
+      "move": ""
+    },
+    "contractAddress": "0xf11b570114886311263ec42030b0d7e5f02fa951",
+    "contractAddressByChain": {
+      "eip155:8453": {
+        "chainId": "eip155:8453",
+        "address": "0xf11b570114886311263ec42030b0d7e5f02fa951"
+      },
+      "solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp": {
+        "chainId": "solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp",
+        "address": "95Dogh33LWsLYGnuaYHHeF9G53CfGJo3G3PVp1g7izG4"
+      },
+      "eip155:1": {
+        "chainId": "eip155:1",
+        "address": "0xf11b570114886311263ec42030b0d7e5f02fa951"
+      },
+      "eip155:56": {
+        "chainId": "eip155:56",
+        "address": "0xf11b570114886311263ec42030b0d7e5f02fa951"
+      }
+    },
+    "initialBuy": null,
+    "maxSupply": 1000000000,
+    "deployments": [
+      {
+        "chainId": "solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp",
+        "contractAddress": "95Dogh33LWsLYGnuaYHHeF9G53CfGJo3G3PVp1g7izG4",
+        "curveAddress": "FJLWPpFZyDhYBeKPSoEh7g1S7wSTVGTVFzxRjDWPdMpy",
+        "transactionId": "2HAL6t6EBwAFxtcNwe1GTmjxvQk87R9EjngDBQ2tw5jX91WDJ1s9Y1U5spSYvTsPnmHT8EPF6NX1FyfHLMPpWk6i",
+        "createdAt": 1761582990912,
+        "lastTransactionTimestamp": 1762523470,
+        "state": "active",
+        "marketCap": 81493,
+        "circulatingMarketCap": 81493.3544042106,
+        "liquidity": 21456,
+        "codexCirculatingSupply": "203896980.213063582",
+        "codexTotalSupply": "203896980.213063582",
+        "change24": -0.0113249784100818,
+        "change1h": 0,
+        "change4h": -0.00532000829396141,
+        "change5m": 0,
+        "hasGraduated": true,
+        "priceUSD": 0.000399679064982,
+        "remainingLiquidityUntilGraduationPercentage": 0,
+        "volume24": 1639,
+        "holders": 371,
+        "txnCount24": 18
+      },
+      {
+        "chainId": "eip155:8453",
+        "contractAddress": "0xf11b570114886311263ec42030b0d7e5f02fa951",
+        "curveAddress": "0xf11b570114886311263ec42030b0d7e5f02fa951",
+        "transactionId": "0x49a04af04b4d85c96834d37f7c6b69a27e0cb78f38c37350f7c070b3ebba4dcd",
+        "createdAt": 1761582990912,
+        "lastTransactionTimestamp": 1762419725,
+        "state": "active",
+        "marketCap": 96860,
+        "circulatingMarketCap": 103435.9201495,
+        "liquidity": 19459,
+        "codexCirculatingSupply": "250000000",
+        "codexTotalSupply": "234107379.455120803",
+        "change24": 0,
+        "change1h": 0,
+        "change4h": 0,
+        "change5m": 0,
+        "hasGraduated": true,
+        "priceUSD": 0.000413743680598,
+        "remainingLiquidityUntilGraduationPercentage": 0,
+        "volume24": 0,
+        "holders": 273,
+        "txnCount24": 0
+      },
+      {
+        "chainId": "eip155:56",
+        "contractAddress": "0xf11b570114886311263ec42030b0d7e5f02fa951",
+        "curveAddress": "0xf11b570114886311263ec42030b0d7e5f02fa951",
+        "transactionId": "0x95ea0807df6beada1d48be459714f38a36fd30433d8d54ba524f7ed0258345cc",
+        "createdAt": 1761582990912,
+        "lastTransactionTimestamp": 1762524008,
+        "state": "active",
+        "marketCap": 66914,
+        "circulatingMarketCap": 99546.2826015,
+        "liquidity": 12162,
+        "codexCirculatingSupply": "250000000",
+        "codexTotalSupply": "168047747.5437",
+        "change24": -0.0147414016417548,
+        "change1h": 0,
+        "change4h": 0.0131245783777005,
+        "change5m": 0,
+        "hasGraduated": true,
+        "priceUSD": 0.000398185130406,
+        "remainingLiquidityUntilGraduationPercentage": 0,
+        "volume24": 1145,
+        "holders": 260,
+        "txnCount24": 6
+      },
+      {
+        "chainId": "eip155:1",
+        "contractAddress": "0xf11b570114886311263ec42030b0d7e5f02fa951",
+        "curveAddress": "0xf11b570114886311263ec42030b0d7e5f02fa951",
+        "transactionId": "0x5c3b8853f8f418b2ce4199564b208d755dc7604c31ba6a8b32c42a3a48a9daf5",
+        "createdAt": 1761582990912,
+        "lastTransactionTimestamp": 1762349075,
+        "state": "active",
+        "marketCap": 100937,
+        "circulatingMarketCap": 100936.59448625,
+        "liquidity": 16927,
+        "codexCirculatingSupply": "250000000",
+        "codexTotalSupply": "250000000",
+        "change24": 0,
+        "change1h": 0,
+        "change4h": 0,
+        "change5m": 0,
+        "hasGraduated": true,
+        "priceUSD": 0.000403746377945,
+        "remainingLiquidityUntilGraduationPercentage": 0,
+        "volume24": 0,
+        "holders": 137,
+        "txnCount24": 0
+      }
+    ],
+    "deploymentEstimatesByChain": {
+      "solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp": 13
+    },
+    "graduationsByChain": {
+      "eip155:1": {
+        "baseAmount": "",
+        "blockTimestamp": {
+          "seconds": "1760927699",
+          "nanos": 0
+        },
+        "chainId": "eip155:1",
+        "createdAt": {
+          "seconds": "1761582990",
+          "nanos": 911983367
+        },
+        "tokenAmount": "",
+        "tokenId": "0x151ca8ac879b237faf6eeb5f53d32a6241f9a90c3567a3a1a494d13cd67b42c0",
+        "transactionId": ""
+      },
+      "eip155:56": {
+        "baseAmount": "",
+        "blockTimestamp": {
+          "seconds": "1760927555",
+          "nanos": 0
+        },
+        "chainId": "eip155:56",
+        "createdAt": {
+          "seconds": "1761582990",
+          "nanos": 911973812
+        },
+        "tokenAmount": "",
+        "tokenId": "0x151ca8ac879b237faf6eeb5f53d32a6241f9a90c3567a3a1a494d13cd67b42c0",
+        "transactionId": ""
+      },
+      "eip155:8453": {
+        "baseAmount": "",
+        "blockTimestamp": {
+          "seconds": "1760927621",
+          "nanos": 0
+        },
+        "chainId": "eip155:8453",
+        "createdAt": {
+          "seconds": "1761582990",
+          "nanos": 911978686
+        },
+        "tokenAmount": "",
+        "tokenId": "0x151ca8ac879b237faf6eeb5f53d32a6241f9a90c3567a3a1a494d13cd67b42c0",
+        "transactionId": ""
+      },
+      "solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp": {
+        "baseAmount": "base_10:\"30386445595\"",
+        "blockTimestamp": {
+          "seconds": "1760927540",
+          "nanos": 0
+        },
+        "chainId": "solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp",
+        "createdAt": {
+          "seconds": "1761582990",
+          "nanos": 912039761
+        },
+        "tokenAmount": "base_10:\"24999682779573539\"",
+        "tokenId": "0x151ca8ac879b237faf6eeb5f53d32a6241f9a90c3567a3a1a494d13cd67b42c0",
+        "transactionId": ""
+      }
+    },
+    "pairAddressByChain": {
+      "eip155:1": {
+        "chainId": "eip155:1",
+        "address": "0x9f723565Cecb58A8235AF990c37757E07c53ad58"
+      },
+      "eip155:56": {
+        "chainId": "eip155:56",
+        "address": "0x453bde8838D133D6FB504EB37E6fcc11cEBE06fD"
+      },
+      "eip155:8453": {
+        "chainId": "eip155:8453",
+        "address": "0x7f6B21243A1FFd96D90f54bbFdfDa60CB961830C"
+      },
+      "solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp": {
+        "chainId": "solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp",
+        "address": "3hrP5wmBNZ1eK9FWMg1iuknrwWEuJ4N8iK4pAbRsjNSR"
+      }
+    },
+    "externalUrlWebsite": "",
+    "externalUrlTelegram": "",
+    "externalUrlX": "",
+    "allChainsLinked": false,
+    "poolAddressByChain": {
+      "eip155:1": {
+        "chainId": "eip155:1",
+        "address": "0x9f723565Cecb58A8235AF990c37757E07c53ad58"
+      },
+      "eip155:56": {
+        "chainId": "eip155:56",
+        "address": "0x453bde8838D133D6FB504EB37E6fcc11cEBE06fD"
+      },
+      "eip155:8453": {
+        "chainId": "eip155:8453",
+        "address": "0x7f6B21243A1FFd96D90f54bbFdfDa60CB961830C"
+      },
+      "solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp": {
+        "chainId": "solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp",
+        "address": "3hrP5wmBNZ1eK9FWMg1iuknrwWEuJ4N8iK4pAbRsjNSR"
+      }
+    },
+    "curveAddressByChain": {
+      "eip155:8453": {
+        "chainId": "eip155:8453",
+        "address": "0xf11b570114886311263ec42030b0d7e5f02fa951"
+      },
+      "solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp": {
+        "chainId": "solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp",
+        "address": "FJLWPpFZyDhYBeKPSoEh7g1S7wSTVGTVFzxRjDWPdMpy"
+      },
+      "eip155:1": {
+        "chainId": "eip155:1",
+        "address": "0xf11b570114886311263ec42030b0d7e5f02fa951"
+      },
+      "eip155:56": {
+        "chainId": "eip155:56",
+        "address": "0xf11b570114886311263ec42030b0d7e5f02fa951"
+      }
+    },
+    "isLinkedByChain": {
+
+    },
+    "xchainCreateMsgIdByDestChain": {
+
+    },
+    "xchainCreateTxIds": [],
+    "note": "getFeaturedTokens-fallback"
+  },
+  {
+    "id": "0x3a7a8dca0ad45491c23ff55c619609e914caf260199df93a5acc429e4dbeb1d4",
+    "name": "caip2",
+    "symbol": "Caip2",
+    "description": "It's semantically correct",
+    "imageUrl": "https://cdn.printr.money/t/0x3a7a8dca0ad45491c23ff55c619609e914caf260199df93a5acc429e4dbeb1d4/media/image",
+    "chains": [
+      "solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp",
+      "eip155:8453",
+      "eip155:56",
+      "eip155:5000",
+      "eip155:43114",
+      "eip155:42161",
+      "eip155:1"
+    ],
+    "payerChain": "solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp",
+    "commentCount": "0",
+    "metrics": {
+      "trend": 0.115359947183255,
+      "combinedCirculatingMarketCap": 18371.9582751954,
+      "graduationProgressPercentage": 100,
+      "combinedHolders": 972,
+      "combinedTxnCount24": 64,
+      "combinedBuyCount24": 32,
+      "combinedSellCount24": 32,
+      "combinedVolume24": 6407,
+      "liquidity": 5728
+    },
+    "creator": "0xC215B656780e7bC05568F2f768758dae0c94292D",
+    "creatorAddressByChain": {
+      "evm": "0xC215B656780e7bC05568F2f768758dae0c94292D",
+      "svm": "BuaCez44QYeNRfUfHrRW1YvKcadfRVUe2DxGEMVBRQiw",
+      "move": ""
+    },
+    "contractAddress": "0xc33f294bae8f55554c7b786306eac562d8fe9566",
+    "contractAddressByChain": {
+      "eip155:1": {
+        "chainId": "eip155:1",
+        "address": "0xc33f294bae8f55554c7b786306eac562d8fe9566"
+      },
+      "eip155:56": {
+        "chainId": "eip155:56",
+        "address": "0xc33f294bae8f55554c7b786306eac562d8fe9566"
+      },
+      "eip155:5000": {
+        "chainId": "eip155:5000",
+        "address": "0xc33f294bae8f55554c7b786306eac562d8fe9566"
+      },
+      "eip155:8453": {
+        "chainId": "eip155:8453",
+        "address": "0xc33f294bae8f55554c7b786306eac562d8fe9566"
+      },
+      "eip155:42161": {
+        "chainId": "eip155:42161",
+        "address": "0xc33f294bae8f55554c7b786306eac562d8fe9566"
+      },
+      "eip155:43114": {
+        "chainId": "eip155:43114",
+        "address": "0xc33f294bae8f55554c7b786306eac562d8fe9566"
+      },
+      "solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp": {
+        "chainId": "solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp",
+        "address": "AfVZXLLDEyCxz3Fjk46n6bT2hmM2USjN1pusSzymHvJK"
+      }
+    },
+    "initialBuy": null,
+    "maxSupply": 1000000000,
+    "deployments": [
+      {
+        "chainId": "solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp",
+        "contractAddress": "AfVZXLLDEyCxz3Fjk46n6bT2hmM2USjN1pusSzymHvJK",
+        "curveAddress": "3LEtScaasJBs3oShxrRwRpFQSYJwB3UsrttN4PCHxSvj",
+        "transactionId": "3nXKTGzUWqAUe3x5vR9pEY31mGS2NoNNZmyh5kTwtPHVh4zF4M7bqBg1Pc26g9ruKg3dqLkLaGWDja2U4ENvKKGW",
+        "createdAt": 1761582990923,
+        "lastTransactionTimestamp": 1762512208,
+        "state": "active",
+        "marketCap": 5648,
+        "circulatingMarketCap": 5648.46996592395,
+        "liquidity": 1050,
+        "codexCirculatingSupply": "343872100.942190528",
+        "codexTotalSupply": "343872100.942190528",
+        "change24": 0.115359947183255,
+        "change1h": 0,
+        "change4h": 0,
+        "change5m": 0,
+        "hasGraduated": true,
+        "priceUSD": 0.0000164260780402,
+        "remainingLiquidityUntilGraduationPercentage": 0,
+        "volume24": 3157,
+        "holders": 358,
+        "txnCount24": 28
+      },
+      {
+        "chainId": "eip155:8453",
+        "contractAddress": "0xc33f294bae8f55554c7b786306eac562d8fe9566",
+        "curveAddress": "0xc33f294bae8f55554c7b786306eac562d8fe9566",
+        "transactionId": "0xd34967be3ec4864781b65f87e9029ecff55c1bc61e912701dba338e3d95e6a9b",
+        "createdAt": 1761582990923,
+        "lastTransactionTimestamp": 1762469899,
+        "state": "active",
+        "marketCap": 2167,
+        "circulatingMarketCap": 2167.16283938571,
+        "liquidity": 1030,
+        "codexCirculatingSupply": "142857142.857142857142857142",
+        "codexTotalSupply": "142857142.857142857142857142",
+        "change24": -0.0759731373901165,
+        "change1h": 0,
+        "change4h": 0,
+        "change5m": 0,
+        "hasGraduated": true,
+        "priceUSD": 0.0000151701398757,
+        "remainingLiquidityUntilGraduationPercentage": 0,
+        "volume24": 630,
+        "holders": 206,
+        "txnCount24": 7
+      },
+      {
+        "chainId": "eip155:56",
+        "contractAddress": "0xc33f294bae8f55554c7b786306eac562d8fe9566",
+        "curveAddress": "0xc33f294bae8f55554c7b786306eac562d8fe9566",
+        "transactionId": "0x6be5fc65e124b00e0f4bde04e7b7eb935dac66ad733b0bd66abdc89fe14bff42",
+        "createdAt": 1761582990923,
+        "lastTransactionTimestamp": 1762519450,
+        "state": "active",
+        "marketCap": 2043,
+        "circulatingMarketCap": 2042.7272971,
+        "liquidity": 995,
+        "codexCirculatingSupply": "142857142.857142857142857142",
+        "codexTotalSupply": "142857142.857142857142857142",
+        "change24": -0.0688097498798041,
+        "change1h": 0,
+        "change4h": -0.0154739097265819,
+        "change5m": 0,
+        "hasGraduated": true,
+        "priceUSD": 0.0000142990910797,
+        "remainingLiquidityUntilGraduationPercentage": 0,
+        "volume24": 1011,
+        "holders": 154,
+        "txnCount24": 12
+      },
+      {
+        "chainId": "eip155:5000",
+        "contractAddress": "0xc33f294bae8f55554c7b786306eac562d8fe9566",
+        "curveAddress": "0xc33f294bae8f55554c7b786306eac562d8fe9566",
+        "transactionId": "0x7f3d41115a868bcf5572565beb517472262223791c3cc234c41adc55867c825c",
+        "createdAt": 1761582990923,
+        "lastTransactionTimestamp": 1762480356,
+        "state": "active",
+        "marketCap": 2152,
+        "circulatingMarketCap": 2152.44329404286,
+        "liquidity": 603,
+        "codexCirculatingSupply": "142857142.857142857142857142",
+        "codexTotalSupply": "142857142.857142857142857142",
+        "change24": 0.0571401080280607,
+        "change1h": 0,
+        "change4h": 0,
+        "change5m": 0,
+        "hasGraduated": true,
+        "priceUSD": 0.0000150671030583,
+        "remainingLiquidityUntilGraduationPercentage": 0,
+        "volume24": 252,
+        "holders": 70,
+        "txnCount24": 3
+      },
+      {
+        "chainId": "eip155:43114",
+        "contractAddress": "0xc33f294bae8f55554c7b786306eac562d8fe9566",
+        "curveAddress": "0xc33f294bae8f55554c7b786306eac562d8fe9566",
+        "transactionId": "0x6e90cf3cdb0f773af105e3c68b0c69cf72673fb0fefc888b7740799c0b855bd5",
+        "createdAt": 1761582990923,
+        "lastTransactionTimestamp": 1762463041,
+        "state": "active",
+        "marketCap": 2170,
+        "circulatingMarketCap": 2170.35603021429,
+        "liquidity": 632,
+        "codexCirculatingSupply": "142857142.857142857142857142",
+        "codexTotalSupply": "142857142.857142857142857142",
+        "change24": -0.0284050232802033,
+        "change1h": 0,
+        "change4h": 0,
+        "change5m": 0,
+        "hasGraduated": true,
+        "priceUSD": 0.0000151924922115,
+        "remainingLiquidityUntilGraduationPercentage": 0,
+        "volume24": 201,
+        "holders": 57,
+        "txnCount24": 3
+      },
+      {
+        "chainId": "eip155:42161",
+        "contractAddress": "0xc33f294bae8f55554c7b786306eac562d8fe9566",
+        "curveAddress": "0xc33f294bae8f55554c7b786306eac562d8fe9566",
+        "transactionId": "0xcfb61845cda96da531b02b5ccae7e6f41c3015a81cb4781d77cc758ef8db69b7",
+        "createdAt": 1761582990923,
+        "lastTransactionTimestamp": 1762469952,
+        "state": "active",
+        "marketCap": 2173,
+        "circulatingMarketCap": 2173.39854955714,
+        "liquidity": 625,
+        "codexCirculatingSupply": "142857142.857142857142857142",
+        "codexTotalSupply": "142857142.857142857142857142",
+        "change24": -0.00104152993878037,
+        "change1h": 0,
+        "change4h": 0,
+        "change5m": 0,
+        "hasGraduated": true,
+        "priceUSD": 0.0000152137898469,
+        "remainingLiquidityUntilGraduationPercentage": 0,
+        "volume24": 304,
+        "holders": 60,
+        "txnCount24": 4
+      },
+      {
+        "chainId": "eip155:1",
+        "contractAddress": "0xc33f294bae8f55554c7b786306eac562d8fe9566",
+        "curveAddress": "0xc33f294bae8f55554c7b786306eac562d8fe9566",
+        "transactionId": "0x05ed1ecd8197765db7efdb12f470014aa59b19ab2a89b1ca0703484b38943ea7",
+        "createdAt": 1761582990923,
+        "lastTransactionTimestamp": 1762461575,
+        "state": "active",
+        "marketCap": 2017,
+        "circulatingMarketCap": 2017.40029897143,
+        "liquidity": 793,
+        "codexCirculatingSupply": "142857142.857142857142857142",
+        "codexTotalSupply": "142857142.857142857142857142",
+        "change24": -0.104140036422695,
+        "change1h": 0,
+        "change4h": 0,
+        "change5m": 0,
+        "hasGraduated": true,
+        "priceUSD": 0.0000141218020928,
+        "remainingLiquidityUntilGraduationPercentage": 0,
+        "volume24": 852,
+        "holders": 67,
+        "txnCount24": 7
+      }
+    ],
+    "deploymentEstimatesByChain": {
+      "solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp": 13
+    },
+    "graduationsByChain": {
+      "eip155:5000": {
+        "baseAmount": "",
+        "blockTimestamp": {
+          "seconds": "1760844626",
+          "nanos": 0
+        },
+        "chainId": "eip155:5000",
+        "createdAt": {
+          "seconds": "1761582990",
+          "nanos": 922529563
+        },
+        "tokenAmount": "",
+        "tokenId": "0x3a7a8dca0ad45491c23ff55c619609e914caf260199df93a5acc429e4dbeb1d4",
+        "transactionId": ""
+      },
+      "eip155:8453": {
+        "baseAmount": "",
+        "blockTimestamp": {
+          "seconds": "1760838995",
+          "nanos": 0
+        },
+        "chainId": "eip155:8453",
+        "createdAt": {
+          "seconds": "1761582990",
+          "nanos": 922505713
+        },
+        "tokenAmount": "",
+        "tokenId": "0x3a7a8dca0ad45491c23ff55c619609e914caf260199df93a5acc429e4dbeb1d4",
+        "transactionId": ""
+      },
+      "eip155:42161": {
+        "baseAmount": "",
+        "blockTimestamp": {
+          "seconds": "1760842839",
+          "nanos": 0
+        },
+        "chainId": "eip155:42161",
+        "createdAt": {
+          "seconds": "1761582990",
+          "nanos": 922520326
+        },
+        "tokenAmount": "",
+        "tokenId": "0x3a7a8dca0ad45491c23ff55c619609e914caf260199df93a5acc429e4dbeb1d4",
+        "transactionId": ""
+      },
+      "eip155:43114": {
+        "baseAmount": "",
+        "blockTimestamp": {
+          "seconds": "1760843387",
+          "nanos": 0
+        },
+        "chainId": "eip155:43114",
+        "createdAt": {
+          "seconds": "1761582990",
+          "nanos": 922524938
+        },
+        "tokenAmount": "",
+        "tokenId": "0x3a7a8dca0ad45491c23ff55c619609e914caf260199df93a5acc429e4dbeb1d4",
+        "transactionId": ""
+      },
+      "solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp": {
+        "baseAmount": "base_10:\"30373897176\"",
+        "blockTimestamp": {
+          "seconds": "1760812045",
+          "nanos": 0
+        },
+        "chainId": "solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp",
+        "createdAt": {
+          "seconds": "1761582990",
+          "nanos": 922569210
+        },
+        "tokenAmount": "base_10:\"14285532281027309\"",
+        "tokenId": "0x3a7a8dca0ad45491c23ff55c619609e914caf260199df93a5acc429e4dbeb1d4",
+        "transactionId": ""
+      },
+      "eip155:1": {
+        "baseAmount": "",
+        "blockTimestamp": {
+          "seconds": "1760839091",
+          "nanos": 0
+        },
+        "chainId": "eip155:1",
+        "createdAt": {
+          "seconds": "1761582990",
+          "nanos": 922510593
+        },
+        "tokenAmount": "",
+        "tokenId": "0x3a7a8dca0ad45491c23ff55c619609e914caf260199df93a5acc429e4dbeb1d4",
+        "transactionId": ""
+      },
+      "eip155:56": {
+        "baseAmount": "",
+        "blockTimestamp": {
+          "seconds": "1760842560",
+          "nanos": 0
+        },
+        "chainId": "eip155:56",
+        "createdAt": {
+          "seconds": "1761582990",
+          "nanos": 922515455
+        },
+        "tokenAmount": "",
+        "tokenId": "0x3a7a8dca0ad45491c23ff55c619609e914caf260199df93a5acc429e4dbeb1d4",
+        "transactionId": ""
+      }
+    },
+    "pairAddressByChain": {
+      "solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp": {
+        "chainId": "solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp",
+        "address": "6bMUmuqtTdxou5EDUNDFH34yBzGo23H9rsjdyVPvaCLY"
+      },
+      "eip155:1": {
+        "chainId": "eip155:1",
+        "address": "0x259EAC0C1088464190e4241747500cF8E4d965c2"
+      },
+      "eip155:56": {
+        "chainId": "eip155:56",
+        "address": "0xA3C94B7C3612E5461c26a97B0BF58B020275Ce75"
+      },
+      "eip155:5000": {
+        "chainId": "eip155:5000",
+        "address": "0x0323074468Be6E6A8D1C5171290Fba9e82Bc4F8a"
+      },
+      "eip155:8453": {
+        "chainId": "eip155:8453",
+        "address": "0xb5F4b646F4970Aa0EAe40B4155C0dc5778415CA8"
+      },
+      "eip155:42161": {
+        "chainId": "eip155:42161",
+        "address": "0x407c85Bba89c36Baf5bEc551668B7684B3180Bc7"
+      },
+      "eip155:43114": {
+        "chainId": "eip155:43114",
+        "address": "0xbE927231686610101C31068Cb7F2DC98F5AB2039"
+      }
+    },
+    "externalUrlWebsite": "",
+    "externalUrlTelegram": "",
+    "externalUrlX": "",
+    "allChainsLinked": false,
+    "poolAddressByChain": {
+      "solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp": {
+        "chainId": "solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp",
+        "address": "6bMUmuqtTdxou5EDUNDFH34yBzGo23H9rsjdyVPvaCLY"
+      },
+      "eip155:1": {
+        "chainId": "eip155:1",
+        "address": "0x259EAC0C1088464190e4241747500cF8E4d965c2"
+      },
+      "eip155:56": {
+        "chainId": "eip155:56",
+        "address": "0xA3C94B7C3612E5461c26a97B0BF58B020275Ce75"
+      },
+      "eip155:5000": {
+        "chainId": "eip155:5000",
+        "address": "0x0323074468Be6E6A8D1C5171290Fba9e82Bc4F8a"
+      },
+      "eip155:8453": {
+        "chainId": "eip155:8453",
+        "address": "0xb5F4b646F4970Aa0EAe40B4155C0dc5778415CA8"
+      },
+      "eip155:42161": {
+        "chainId": "eip155:42161",
+        "address": "0x407c85Bba89c36Baf5bEc551668B7684B3180Bc7"
+      },
+      "eip155:43114": {
+        "chainId": "eip155:43114",
+        "address": "0xbE927231686610101C31068Cb7F2DC98F5AB2039"
+      }
+    },
+    "curveAddressByChain": {
+      "eip155:8453": {
+        "chainId": "eip155:8453",
+        "address": "0xc33f294bae8f55554c7b786306eac562d8fe9566"
+      },
+      "eip155:42161": {
+        "chainId": "eip155:42161",
+        "address": "0xc33f294bae8f55554c7b786306eac562d8fe9566"
+      },
+      "eip155:43114": {
+        "chainId": "eip155:43114",
+        "address": "0xc33f294bae8f55554c7b786306eac562d8fe9566"
+      },
+      "solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp": {
+        "chainId": "solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp",
+        "address": "3LEtScaasJBs3oShxrRwRpFQSYJwB3UsrttN4PCHxSvj"
+      },
+      "eip155:1": {
+        "chainId": "eip155:1",
+        "address": "0xc33f294bae8f55554c7b786306eac562d8fe9566"
+      },
+      "eip155:56": {
+        "chainId": "eip155:56",
+        "address": "0xc33f294bae8f55554c7b786306eac562d8fe9566"
+      },
+      "eip155:5000": {
+        "chainId": "eip155:5000",
+        "address": "0xc33f294bae8f55554c7b786306eac562d8fe9566"
+      }
+    },
+    "isLinkedByChain": {
+
+    },
+    "xchainCreateMsgIdByDestChain": {
+
+    },
+    "xchainCreateTxIds": []
+  },
+  {
+    "id": "0x57a02b3daa88adffcd720f122feb2567765d89bba832b933edd5ac7cce434980",
+    "name": "BILLI",
+    "symbol": "BILLI",
+    "description": "BILLI Bybit mascot",
+    "imageUrl": "https://cdn.printr.money/t/0x57a02b3daa88adffcd720f122feb2567765d89bba832b933edd5ac7cce434980/media/image",
+    "chains": [
+      "eip155:5000"
+    ],
+    "payerChain": "eip155:5000",
+    "commentCount": "0",
+    "metrics": {
+      "trend": 0,
+      "combinedCirculatingMarketCap": 493096.844791907,
+      "graduationProgressPercentage": 100,
+      "combinedHolders": 384,
+      "combinedTxnCount24": 170,
+      "combinedBuyCount24": 123,
+      "combinedSellCount24": 47,
+      "combinedVolume24": 57514,
+      "liquidity": 42939
+    },
+    "creator": "0xa625e147CCb25bb38Ec6ADAC512C4F8e156fE15F",
+    "creatorAddressByChain": {
+      "evm": "0xa625e147CCb25bb38Ec6ADAC512C4F8e156fE15F",
+      "svm": "",
+      "move": ""
+    },
+    "contractAddress": "0x375450706cb79ab749ebb90001bda10341dd82bc",
+    "contractAddressByChain": {
+      "eip155:5000": {
+        "chainId": "eip155:5000",
+        "address": "0x375450706cb79ab749ebb90001bda10341dd82bc"
+      }
+    },
+    "initialBuy": null,
+    "maxSupply": 1000000000,
+    "deployments": [
+      {
+        "chainId": "eip155:5000",
+        "contractAddress": "0x375450706cb79ab749ebb90001bda10341dd82bc",
+        "curveAddress": "0x375450706cb79ab749ebb90001bda10341dd82bc",
+        "transactionId": "0xb54493f18d3d30dd492471f743156b1f0414211cd65ae3c882e4d1bdb5d052f1",
+        "createdAt": 1761579821091,
+        "lastTransactionTimestamp": 1762527782,
+        "state": "active",
+        "marketCap": 493097,
+        "circulatingMarketCap": 493096.844791907,
+        "liquidity": 42939,
+        "codexCirculatingSupply": "999999976.239773723770895648",
+        "codexTotalSupply": "1000000000",
+        "change24": -0.0831446164211789,
+        "change1h": -0.0243550144333067,
+        "change4h": -0.0277174248673758,
+        "change5m": 0,
+        "hasGraduated": true,
+        "priceUSD": 0.000493096856508,
+        "remainingLiquidityUntilGraduationPercentage": 0,
+        "volume24": 57514,
+        "holders": 384,
+        "txnCount24": 170
+      }
+    ],
+    "deploymentEstimatesByChain": {
+      "eip155:5000": 5
+    },
+    "graduationsByChain": {
+      "eip155:5000": {
+        "baseAmount": "",
+        "blockTimestamp": {
+          "seconds": "1761579814",
+          "nanos": 0
+        },
+        "chainId": "eip155:5000",
+        "createdAt": {
+          "seconds": "1761579821",
+          "nanos": 90734962
+        },
+        "tokenAmount": "",
+        "tokenId": "0x57a02b3daa88adffcd720f122feb2567765d89bba832b933edd5ac7cce434980",
+        "transactionId": ""
+      }
+    },
+    "pairAddressByChain": {
+      "eip155:5000": {
+        "chainId": "eip155:5000",
+        "address": "0x273f2fA7FB26d97880c8Aad9eAF7B37ccB719498"
+      }
+    },
+    "externalUrlWebsite": "",
+    "externalUrlTelegram": "",
+    "externalUrlX": "",
+    "allChainsLinked": false,
+    "poolAddressByChain": {
+      "eip155:5000": {
+        "chainId": "eip155:5000",
+        "address": "0x273f2fA7FB26d97880c8Aad9eAF7B37ccB719498"
+      }
+    },
+    "curveAddressByChain": {
+      "eip155:5000": {
+        "chainId": "eip155:5000",
+        "address": "0x375450706cb79ab749ebb90001bda10341dd82bc"
+      }
+    },
+    "isLinkedByChain": {
+
+    },
+    "xchainCreateMsgIdByDestChain": {
+
+    },
+    "xchainCreateTxIds": []
+  },
+  {
+    "id": "0x3fbe9aa21c8b661c1f75d9a22fc0a90b3eb3d6c5236162ef57a5cb09cc9bc9a8",
+    "name": "Byron",
+    "symbol": "Byron",
+    "description": "https://x.com/bybit_official/status/1982084733031886967",
+    "imageUrl": "https://cdn.printr.money/t/0x3fbe9aa21c8b661c1f75d9a22fc0a90b3eb3d6c5236162ef57a5cb09cc9bc9a8/media/image",
+    "chains": [
+      "eip155:5000"
+    ],
+    "payerChain": "eip155:5000",
+    "commentCount": "0",
+    "metrics": {
+      "trend": 0.286701854892032,
+      "combinedCirculatingMarketCap": 18449.9932208,
+      "graduationProgressPercentage": 68.8736946715904,
+      "combinedHolders": 112,
+      "combinedTxnCount24": 10,
+      "combinedBuyCount24": 4,
+      "combinedSellCount24": 6,
+      "combinedVolume24": 1829,
+      "liquidity": 4607
+    },
+    "creator": "0xf8551fEB170c680C6c6D59b7ce0Ea49486f49514",
+    "creatorAddressByChain": {
+      "evm": "0xf8551fEB170c680C6c6D59b7ce0Ea49486f49514",
+      "svm": "",
+      "move": ""
+    },
+    "contractAddress": "0x0018f3b857e60d34ffd8dd1d5916f41e3a07d47c",
+    "contractAddressByChain": {
+      "eip155:5000": {
+        "chainId": "eip155:5000",
+        "address": "0x0018f3b857e60d34ffd8dd1d5916f41e3a07d47c"
+      }
+    },
+    "initialBuy": null,
+    "maxSupply": 1000000000,
+    "deployments": [
+      {
+        "chainId": "eip155:5000",
+        "contractAddress": "0x0018f3b857e60d34ffd8dd1d5916f41e3a07d47c",
+        "curveAddress": "0x0018f3b857e60d34ffd8dd1d5916f41e3a07d47c",
+        "transactionId": "0xd89801924483472f5b51239a08b49c3cbd83e2c350a82589237e5192784d03b4",
+        "createdAt": 1761402750966,
+        "lastTransactionTimestamp": 1762519728,
+        "state": "active",
+        "marketCap": 18450,
+        "circulatingMarketCap": 18449.9932208,
+        "liquidity": 4607,
+        "codexCirculatingSupply": "1000000000",
+        "codexTotalSupply": "1000000000",
+        "change24": 0.286701854892032,
+        "change1h": 0,
+        "change4h": 0.165251082115517,
+        "change5m": 0,
+        "hasGraduated": false,
+        "priceUSD": 0.0000184499932208,
+        "remainingLiquidityUntilGraduationPercentage": 100,
+        "volume24": 1829,
+        "holders": 112,
+        "txnCount24": 10
+      }
+    ],
+    "deploymentEstimatesByChain": {
+      "eip155:5000": 5
+    },
+    "graduationsByChain": {
+
+    },
+    "pairAddressByChain": {
+      "eip155:5000": {
+        "chainId": "eip155:5000",
+        "address": "0x91c916EcBA3ed161fac3CFAB21605280035C1b0C"
+      }
+    },
+    "externalUrlWebsite": "",
+    "externalUrlTelegram": "",
+    "externalUrlX": "",
+    "allChainsLinked": false,
+    "poolAddressByChain": {
+      "eip155:5000": {
+        "chainId": "eip155:5000",
+        "address": "0x91c916EcBA3ed161fac3CFAB21605280035C1b0C"
+      }
+    },
+    "curveAddressByChain": {
+      "eip155:5000": {
+        "chainId": "eip155:5000",
+        "address": "0x0018f3b857e60d34ffd8dd1d5916f41e3a07d47c"
+      }
+    },
+    "isLinkedByChain": {
+
+    },
+    "xchainCreateMsgIdByDestChain": {
+
+    },
+    "xchainCreateTxIds": [],
+    "note": "getFeaturedTokens-fallback"
+  },
+  {
+    "id": "0xd87b722b223eef3f16379521b1ff3709f4d1288d367b667f941f28bc9f016edf",
+    "name": "mantle intern",
+    "symbol": "INTERN",
+    "description": "THE OFFICIAL MANTLE MASCOT\r\n\r\nhttps://x.com/MantleIntern_/status/1969373170919428361",
+    "imageUrl": "https://cdn.printr.money/t/0xd87b722b223eef3f16379521b1ff3709f4d1288d367b667f941f28bc9f016edf/media/image",
+    "chains": [
+      "eip155:5000"
+    ],
+    "payerChain": "eip155:5000",
+    "commentCount": "0",
+    "metrics": {
+      "trend": 0.0372977603642827,
+      "combinedCirculatingMarketCap": 153062.620956,
+      "graduationProgressPercentage": 100,
+      "combinedHolders": 307,
+      "combinedTxnCount24": 15,
+      "combinedBuyCount24": 8,
+      "combinedSellCount24": 7,
+      "combinedVolume24": 5715,
+      "liquidity": 21893
+    },
+    "creator": "0xDd10211D2030f07F7b94a7d6C4F0B03Fbf86bEf8",
+    "creatorAddressByChain": {
+      "evm": "0xDd10211D2030f07F7b94a7d6C4F0B03Fbf86bEf8",
+      "svm": "",
+      "move": ""
+    },
+    "contractAddress": "0x621ed0f0053c705da4861a5af7244be04655de9b",
+    "contractAddressByChain": {
+      "eip155:5000": {
+        "chainId": "eip155:5000",
+        "address": "0x621ed0f0053c705da4861a5af7244be04655de9b"
+      }
+    },
+    "initialBuy": null,
+    "maxSupply": 1000000000,
+    "deployments": [
+      {
+        "chainId": "eip155:5000",
+        "contractAddress": "0x621ed0f0053c705da4861a5af7244be04655de9b",
+        "curveAddress": "0x621ed0f0053c705da4861a5af7244be04655de9b",
+        "transactionId": "0xf743590ea7db2f7cdc3cd65c094478f299a8f4e400a5ea02b7e939412c3f7d7c",
+        "createdAt": 1761592214526,
+        "lastTransactionTimestamp": 1762528826,
+        "state": "active",
+        "marketCap": 153063,
+        "circulatingMarketCap": 153062.620956,
+        "liquidity": 21893,
+        "codexCirculatingSupply": "1000000000",
+        "codexTotalSupply": "1000000000",
+        "change24": 0.0372977603642827,
+        "change1h": 0.00815351620774143,
+        "change4h": 0.0260365105238927,
+        "change5m": 0,
+        "hasGraduated": true,
+        "priceUSD": 0.000153062620956,
+        "remainingLiquidityUntilGraduationPercentage": 0,
+        "volume24": 5715,
+        "holders": 307,
+        "txnCount24": 15
+      }
+    ],
+    "deploymentEstimatesByChain": {
+      "eip155:5000": 5
+    },
+    "graduationsByChain": {
+      "eip155:5000": {
+        "baseAmount": "",
+        "blockTimestamp": {
+          "seconds": "1761592206",
+          "nanos": 0
+        },
+        "chainId": "eip155:5000",
+        "createdAt": {
+          "seconds": "1761592214",
+          "nanos": 525192464
+        },
+        "tokenAmount": "",
+        "tokenId": "0xd87b722b223eef3f16379521b1ff3709f4d1288d367b667f941f28bc9f016edf",
+        "transactionId": ""
+      }
+    },
+    "pairAddressByChain": {
+      "eip155:5000": {
+        "chainId": "eip155:5000",
+        "address": "0x905dA428b2186c3Daf5230B2C90c1d45dFDd502d"
+      }
+    },
+    "externalUrlWebsite": "",
+    "externalUrlTelegram": "",
+    "externalUrlX": "",
+    "allChainsLinked": false,
+    "poolAddressByChain": {
+      "eip155:5000": {
+        "chainId": "eip155:5000",
+        "address": "0x905dA428b2186c3Daf5230B2C90c1d45dFDd502d"
+      }
+    },
+    "curveAddressByChain": {
+      "eip155:5000": {
+        "chainId": "eip155:5000",
+        "address": "0x621ed0f0053c705da4861a5af7244be04655de9b"
+      }
+    },
+    "isLinkedByChain": {
+
+    },
+    "xchainCreateMsgIdByDestChain": {
+
+    },
+    "xchainCreateTxIds": [],
+    "note": "getFeaturedTokens-fallback"
+  },
+  {
+    "id": "0x07e052148d935a744e8b3a19bf97671cfbcdaed7869ac8b67dbf08fb35f5a781",
+    "name": "Bety",
+    "symbol": "Bety",
+    "description": "https://x.com/Bybit_Official/status/1985587816114401574",
+    "imageUrl": "https://cdn.printr.money/t/0x07e052148d935a744e8b3a19bf97671cfbcdaed7869ac8b67dbf08fb35f5a781/media/image",
+    "chains": [
+      "eip155:5000"
+    ],
+    "payerChain": "eip155:5000",
+    "commentCount": "0",
+    "metrics": {
+      "trend": 0.0214376500357983,
+      "combinedCirculatingMarketCap": 46104.8970429,
+      "graduationProgressPercentage": 84.487175408799,
+      "combinedHolders": 127,
+      "combinedTxnCount24": 16,
+      "combinedBuyCount24": 8,
+      "combinedSellCount24": 8,
+      "combinedVolume24": 4486,
+      "liquidity": 10703
+    },
+    "creator": "0x9AeFE408Cb602ee3c66Be27043aaf97472fd66EE",
+    "creatorAddressByChain": {
+      "evm": "0x9AeFE408Cb602ee3c66Be27043aaf97472fd66EE",
+      "svm": "",
+      "move": ""
+    },
+    "contractAddress": "0xe5542dd8359d3f26119a0599914adc94f6a5ba63",
+    "contractAddressByChain": {
+      "eip155:5000": {
+        "chainId": "eip155:5000",
+        "address": "0xe5542dd8359d3f26119a0599914adc94f6a5ba63"
+      }
+    },
+    "initialBuy": null,
+    "maxSupply": 1000000000,
+    "deployments": [
+      {
+        "chainId": "eip155:5000",
+        "contractAddress": "0xe5542dd8359d3f26119a0599914adc94f6a5ba63",
+        "curveAddress": "0xe5542dd8359d3f26119a0599914adc94f6a5ba63",
+        "transactionId": "0xf9db098b2c93013d5e61c1dcdc7f35307b4f3c18086eadf195b95b643538934a",
+        "createdAt": 1762236208950,
+        "lastTransactionTimestamp": 1762528496,
+        "state": "active",
+        "marketCap": 46105,
+        "circulatingMarketCap": 46104.8970429,
+        "liquidity": 10703,
+        "codexCirculatingSupply": "1000000000",
+        "codexTotalSupply": "1000000000",
+        "change24": -0.0796030017764047,
+        "change1h": 0.0214376500357983,
+        "change4h": 0.0214376500357983,
+        "change5m": 0,
+        "hasGraduated": false,
+        "priceUSD": 0.0000461048970429,
+        "remainingLiquidityUntilGraduationPercentage": 100,
+        "volume24": 4486,
+        "holders": 127,
+        "txnCount24": 16
+      }
+    ],
+    "deploymentEstimatesByChain": {
+      "eip155:5000": 5
+    },
+    "graduationsByChain": {
+
+    },
+    "pairAddressByChain": {
+      "eip155:5000": {
+        "chainId": "eip155:5000",
+        "address": "0xb08Ab8ac7De4B6Ee6AfAb4A70C406a592DF3f5ab"
+      }
+    },
+    "externalUrlWebsite": "",
+    "externalUrlTelegram": "",
+    "externalUrlX": "",
+    "allChainsLinked": false,
+    "poolAddressByChain": {
+      "eip155:5000": {
+        "chainId": "eip155:5000",
+        "address": "0xb08Ab8ac7De4B6Ee6AfAb4A70C406a592DF3f5ab"
+      }
+    },
+    "curveAddressByChain": {
+      "eip155:5000": {
+        "chainId": "eip155:5000",
+        "address": "0xe5542dd8359d3f26119a0599914adc94f6a5ba63"
+      }
+    },
+    "isLinkedByChain": {
+
+    },
+    "xchainCreateMsgIdByDestChain": {
+
+    },
+    "xchainCreateTxIds": [],
+    "note": "getFeaturedTokens-fallback"
+  },
+  {
+    "id": "0xab7c1cc742ab7b3bff80a3f6bd63782a9427c7365dfe5e8cb397785197c9e9d3",
+    "name": "Bybit Dog",
+    "symbol": "SHADOW",
+    "description": "https://x.com/Bybit_Official/status/1885446086485053801",
+    "imageUrl": "https://cdn.printr.money/t/0xab7c1cc742ab7b3bff80a3f6bd63782a9427c7365dfe5e8cb397785197c9e9d3/media/image",
+    "chains": [
+      "eip155:5000"
+    ],
+    "payerChain": "eip155:5000",
+    "commentCount": "0",
+    "metrics": {
+      "trend": 0.0654404432264631,
+      "combinedCirculatingMarketCap": 14771.4938688,
+      "graduationProgressPercentage": 62.2865264504497,
+      "combinedHolders": 75,
+      "combinedTxnCount24": 3,
+      "combinedBuyCount24": 1,
+      "combinedSellCount24": 2,
+      "combinedVolume24": 369,
+      "liquidity": 3677
+    },
+    "creator": "0xf8551fEB170c680C6c6D59b7ce0Ea49486f49514",
+    "creatorAddressByChain": {
+      "evm": "0xf8551fEB170c680C6c6D59b7ce0Ea49486f49514",
+      "svm": "",
+      "move": ""
+    },
+    "contractAddress": "0x9e82eb4e6cf4ddad35c32941b2f90112cdb9b99c",
+    "contractAddressByChain": {
+      "eip155:5000": {
+        "chainId": "eip155:5000",
+        "address": "0x9e82eb4e6cf4ddad35c32941b2f90112cdb9b99c"
+      }
+    },
+    "initialBuy": null,
+    "maxSupply": 1000000000,
+    "deployments": [
+      {
+        "chainId": "eip155:5000",
+        "contractAddress": "0x9e82eb4e6cf4ddad35c32941b2f90112cdb9b99c",
+        "curveAddress": "0x9E82eb4E6Cf4DDAd35C32941B2f90112cDB9b99c",
+        "transactionId": "0x9b33bd4134fae52c961f7697f35faaa5853def8ae641566a5c529a21f37ca3a8",
+        "createdAt": 1761049888683,
+        "lastTransactionTimestamp": 1762517610,
+        "state": "active",
+        "marketCap": 14771,
+        "circulatingMarketCap": 14771.4938688,
+        "liquidity": 3677,
+        "codexCirculatingSupply": "1000000000",
+        "codexTotalSupply": "1000000000",
+        "change24": 0.000752332217346665,
+        "change1h": 0,
+        "change4h": 0.0654404432264631,
+        "change5m": 0,
+        "hasGraduated": false,
+        "priceUSD": 0.0000147714938688,
+        "remainingLiquidityUntilGraduationPercentage": 100,
+        "volume24": 369,
+        "holders": 75,
+        "txnCount24": 3
+      }
+    ],
+    "deploymentEstimatesByChain": {
+      "eip155:5000": 5
+    },
+    "graduationsByChain": {
+
+    },
+    "pairAddressByChain": {
+      "eip155:5000": {
+        "chainId": "eip155:5000",
+        "address": "0x50926307042617Ac3FFB3d0f673A6c8e811E1134"
+      }
+    },
+    "externalUrlWebsite": "",
+    "externalUrlTelegram": "",
+    "externalUrlX": "https://x.com/Bybit_Official/status/1885446086485053801",
+    "allChainsLinked": false,
+    "poolAddressByChain": {
+      "eip155:5000": {
+        "chainId": "eip155:5000",
+        "address": "0x50926307042617Ac3FFB3d0f673A6c8e811E1134"
+      }
+    },
+    "curveAddressByChain": {
+      "eip155:5000": {
+        "chainId": "eip155:5000",
+        "address": "0x9E82eb4E6Cf4DDAd35C32941B2f90112cDB9b99c"
+      }
+    },
+    "isLinkedByChain": {
+
+    },
+    "xchainCreateMsgIdByDestChain": {
+
+    },
+    "xchainCreateTxIds": [],
+    "note": "getFeaturedTokens-fallback"
+  },
+  {
+    "id": "0xcd2a71c92aea4b35230292224e215d2e55f1cb8a81e647dc11fadbbc0d69adb8",
+    "name": "6-7",
+    "symbol": "SIX7",
+    "description": "6-7: because 8 was never the goal.\r\n",
+    "imageUrl": "https://cdn.printr.money/t/0xcd2a71c92aea4b35230292224e215d2e55f1cb8a81e647dc11fadbbc0d69adb8/media/image",
+    "chains": [
+      "solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp",
+      "eip155:8453",
+      "eip155:56"
+    ],
+    "payerChain": "eip155:8453",
+    "commentCount": "0",
+    "metrics": {
+      "trend": 0.0493838161616278,
+      "combinedCirculatingMarketCap": 12034.3180288,
+      "graduationProgressPercentage": 1.84225230429789,
+      "combinedHolders": 6,
+      "combinedTxnCount24": 8,
+      "combinedBuyCount24": 6,
+      "combinedSellCount24": 2,
+      "combinedVolume24": 246,
+      "liquidity": 244
+    },
+    "creator": "0x3b497d48e3205b58A4D72787B78EAA03D5f48b7e",
+    "creatorAddressByChain": {
+      "evm": "0x3b497d48e3205b58A4D72787B78EAA03D5f48b7e",
+      "svm": "5j3UFV9KpktejouwiZACQfXM2xEgmycRozXyWEMegBEf",
+      "move": ""
+    },
+    "contractAddress": "0xbff30a4c6f2d6b7c653ed841b5bdf6507642c497",
+    "contractAddressByChain": {
+      "eip155:56": {
+        "chainId": "eip155:56",
+        "address": "0xbff30a4c6f2d6b7c653ed841b5bdf6507642c497"
+      },
+      "eip155:8453": {
+        "chainId": "eip155:8453",
+        "address": "0xbff30a4c6f2d6b7c653ed841b5bdf6507642c497"
+      }
+    },
+    "initialBuy": null,
+    "maxSupply": 1000000000,
+    "deployments": [
+      {
+        "chainId": "eip155:8453",
+        "contractAddress": "0xbff30a4c6f2d6b7c653ed841b5bdf6507642c497",
+        "curveAddress": "0xbff30a4c6f2d6b7c653ed841b5bdf6507642c497",
+        "transactionId": "0xfbea0ca50fc9d2b91c8c6b2426f4f0c17d948aa896baf82cb4d6f8f92457566c",
+        "createdAt": 1762515765078,
+        "lastTransactionTimestamp": 1762516773,
+        "state": "active",
+        "marketCap": 6028,
+        "circulatingMarketCap": 6027.99049396667,
+        "liquidity": 122,
+        "codexCirculatingSupply": "333333333.333333333333333333",
+        "codexTotalSupply": "333333333.333333333333333333",
+        "change24": 0.0493838161616278,
+        "change1h": 0,
+        "change4h": 0.0493838161616278,
+        "change5m": 0,
+        "hasGraduated": false,
+        "priceUSD": 0.0000180839714819,
+        "remainingLiquidityUntilGraduationPercentage": 100,
+        "volume24": 123,
+        "holders": 3,
+        "txnCount24": 4
+      },
+      {
+        "chainId": "eip155:56",
+        "contractAddress": "0xbff30a4c6f2d6b7c653ed841b5bdf6507642c497",
+        "curveAddress": "0xbff30a4c6f2d6b7c653ed841b5bdf6507642c497",
+        "transactionId": "0xfd5e7e3f503cc27c08d206df0b397aebc45d6ed052e77f858be78ffedf22df1e",
+        "createdAt": 1762515765068,
+        "lastTransactionTimestamp": 1762516739,
+        "state": "active",
+        "marketCap": 6006,
+        "circulatingMarketCap": 6006.32753483333,
+        "liquidity": 122,
+        "codexCirculatingSupply": "333333333.333333333333333333",
+        "codexTotalSupply": "333333333.333333333333333333",
+        "change24": 0.0459351707341249,
+        "change1h": 0,
+        "change4h": 0.0459351707341249,
+        "change5m": 0,
+        "hasGraduated": false,
+        "priceUSD": 0.0000180189826045,
+        "remainingLiquidityUntilGraduationPercentage": 100,
+        "volume24": 123,
+        "holders": 3,
+        "txnCount24": 4
+      }
+    ],
+    "deploymentEstimatesByChain": {
+      "eip155:56": 10,
+      "eip155:8453": 5,
+      "solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp": 10
+    },
+    "graduationsByChain": {
+
+    },
+    "pairAddressByChain": {
+      "eip155:56": {
+        "chainId": "eip155:56",
+        "address": "0xA59e3BCA5485E39875e01780815d0465f525dc17"
+      },
+      "eip155:8453": {
+        "chainId": "eip155:8453",
+        "address": "0x621E4dFe8B26412c82983a64AbEA6768D1FeE2C9"
+      }
+    },
+    "externalUrlWebsite": "",
+    "externalUrlTelegram": "",
+    "externalUrlX": "",
+    "allChainsLinked": false,
+    "poolAddressByChain": {
+      "eip155:56": {
+        "chainId": "eip155:56",
+        "address": "0xA59e3BCA5485E39875e01780815d0465f525dc17"
+      },
+      "eip155:8453": {
+        "chainId": "eip155:8453",
+        "address": "0x621E4dFe8B26412c82983a64AbEA6768D1FeE2C9"
+      }
+    },
+    "curveAddressByChain": {
+      "eip155:56": {
+        "chainId": "eip155:56",
+        "address": "0xbff30a4c6f2d6b7c653ed841b5bdf6507642c497"
+      },
+      "eip155:8453": {
+        "chainId": "eip155:8453",
+        "address": "0xbff30a4c6f2d6b7c653ed841b5bdf6507642c497"
+      }
+    },
+    "isLinkedByChain": {
+
+    },
+    "xchainCreateMsgIdByDestChain": {
+
+    },
+    "xchainCreateTxIds": [],
+    "note": "getFeaturedTokens-fallback"
+  }
+]

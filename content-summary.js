@@ -3,10 +3,23 @@
 
 (function(){
   const DEBUG = true;
+  const AUTO_REFRESH_INTERVAL = 3000;
+  let _autoRefreshTimer = null;
+  let _scanInFlight = false;
   if (DEBUG) console.log('[CS-SUMMARY] loaded');
 
   function up(s){ return (s||'').trim().toUpperCase(); }
   function isVisible(el){ return !!(el && el.offsetParent !== null); }
+  function ensureAutoRefreshTicker(){
+    if (_autoRefreshTimer) return;
+    _autoRefreshTimer = setInterval(() => {
+      injectForCurrentToken();
+    }, AUTO_REFRESH_INTERVAL);
+  }
+
+  function releaseScanLock(){
+    if (_scanInFlight) _scanInFlight = false;
+  }
 
   function getTokenAddressFromUrl(){
     const p = window.location.pathname;
@@ -23,6 +36,10 @@
     const usd = token.formattedUSD || '$0.00';
     const pct = (token.pnlPct != null) ? (Math.round((token.pnlPct||0)*100)/100 + '%') : '&mdash;';
     const totalProfit = (token.pnlUSD != null) ? ((token.pnlUSD >= 0 ? '' : '-') + '$' + Math.abs(token.pnlUSD).toFixed(2)) : '&mdash;';
+    const GREEN = 'rgb(186, 250, 119)';
+    const RED = 'rgb(250, 119, 119)';
+    const profitColor = (token.pnlUSD != null && token.pnlUSD < 0) ? RED : GREEN;
+    const pctColor = (token.pnlPct != null && token.pnlPct < 0) ? RED : GREEN;
     const boughtTokens = token.formattedBoughtTokens || null;
     const boughtAmount = token.formattedBoughtUSD || token.formattedBoughtMNT || null;
     const tile = 'padding:8px 10px;border-radius:8px;display:flex;flex-direction:column;gap:2px;min-height:28px;';
@@ -38,8 +55,8 @@
         </div>
         <div class="printr-summary-tile" style="${tile}">
           <div style="${k}">Unrealized</div>
-          <div style="${v}color: rgb(186, 250, 119)">${totalProfit}</div>
-          <div style="font-size:8px;font-weight:700;color: rgb(186, 250, 119)">${pct}</div>
+          <div style="${v}color: ${profitColor}">${totalProfit}</div>
+          <div style="font-size:8px;font-weight:700;color: ${pctColor}">${pct}</div>
         </div>
         <div class="printr-summary-tile" style="${tile}">
           <div style="${k}">Realized</div>
@@ -58,8 +75,8 @@
         </div>
         <div class="printr-summary-tile" style="${tile}">
           <div style="${k}">Current Total Profit</div>
-          <div style="${v}color: rgb(186, 250, 119)">${totalProfit}</div>
-          <div style="font-size:8px;font-weight:700;color: rgb(186, 250, 119)">${pct}</div>
+          <div style="${v}color: ${profitColor}">${totalProfit}</div>
+          <div style="font-size:8px;font-weight:700;color: ${pctColor}">${pct}</div>
         </div>
       </div>
     `;
@@ -263,22 +280,33 @@
         return;
       }
 
+      if (_scanInFlight) {
+        if (DEBUG) console.log('[CS-SUMMARY] scan already running; skipping');
+        return;
+      }
+      _scanInFlight = true;
+
       // ask background for the stored site wallet (uses same mechanism as content.js)
       chrome.runtime.sendMessage({ type: 'GET_WALLET' }, function(resp){
         const wallet = resp && resp.ok ? resp.wallet : null;
         if (DEBUG) console.log('[CS-SUMMARY] GET_WALLET ->', resp);
         if (!wallet){
           insertMessage(tokenRef, 'LOADING TOKEN...');
+          releaseScanLock();
           return;
         }
 
         // open long-lived port to ask for scan; background will scan stored wallet and return items
         try{
           const port = chrome.runtime.connect({ name: 'scan-port' });
+          port.onDisconnect?.addListener(() => {
+            releaseScanLock();
+          });
           port.onMessage.addListener(function(m){
             try{
               if (!m || !m.ok){
                 insertMessage(tokenRef, 'No se pudieron obtener los datos del wallet.');
+                releaseScanLock();
                 try{ port.disconnect(); }catch(e){}
                 return;
               }
@@ -296,24 +324,36 @@
               }
 
               try{ port.disconnect(); }catch(e){}
+              releaseScanLock();
             }catch(e){ if (DEBUG) console.error('[CS-SUMMARY] port onMessage error', e); }
           });
           port.postMessage({ type: 'SCAN_TOKENS_MS' });
         }catch(e){
           if (DEBUG) console.error('[CS-SUMMARY] port connect error', e);
           insertMessage(tokenRef, 'Error al solicitar datos al servicio de fondo.');
+          releaseScanLock();
         }
 
       });
 
-    }catch(e){ if (DEBUG) console.error('[CS-SUMMARY] inject error', e); }
+    }catch(e){
+      if (DEBUG) console.error('[CS-SUMMARY] inject error', e);
+      releaseScanLock();
+    }
   }
 
   // Run on load and SPA navigation (delay a bit to avoid SSR hydration conflicts)
+  function kickOffInitialLoad() {
+    setTimeout(() => {
+      injectForCurrentToken();
+      ensureAutoRefreshTicker();
+    }, 800);
+  }
+
   if (document.readyState === 'complete') {
-    setTimeout(injectForCurrentToken, 800);
+    kickOffInitialLoad();
   } else {
-    window.addEventListener('load', () => setTimeout(injectForCurrentToken, 800), { once: true });
+    window.addEventListener('load', () => kickOffInitialLoad(), { once: true });
   }
   const _push = history.pushState; history.pushState = function(){ const r = _push.apply(this, arguments); setTimeout(injectForCurrentToken, 300); return r; };
   const _replace = history.replaceState; history.replaceState = function(){ const r = _replace.apply(this, arguments); setTimeout(injectForCurrentToken, 300); return r; };

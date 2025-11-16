@@ -7,3 +7,155 @@ USAR tokens.json para rescatar los IDS y redireccionar los links nuevos
 Se puede obtener los tokens haciendo esta peticion
 https://app.printr.money/api/getMarketplaceTokens?sort=by-newly-created&chains=eip155%3A5000&page=1&pageSize=20&query=&sortOrder=DESC
 
+
+
+Actualizar lista de tokens
+
+featuredtokens
+Request URL
+https://app.printr.money/api/getFeaturedTokens
+Request Method
+GET
+Status Code
+200 OK
+Remote Address
+[2606:4700::6812:bc4]:443
+Referrer Policy
+strict-origin-when-cross-origin
+alt-svc
+h3=":443"; ma=86400
+cf-placement
+remote-WAW
+cf-ray
+99ae05245e4d0ec6-EZE
+content-encoding
+gzip
+content-type
+application/json
+date
+Fri, 07 Nov 2025 15:56:22 GMT
+priority
+u=1,i
+server
+cloudflare
+server-timing
+cfExtPri
+speculation-rules
+"/cdn-cgi/speculation"
+vary
+Accept-Encoding
+:authority
+app.printr.money
+:method
+GET
+:path
+/api/getFeaturedTokens
+:scheme
+https
+accept
+*/*
+accept-encoding
+gzip, deflate, br, zstd
+accept-language
+es-419,es;q=0.9,en;q=0.8,it;q=0.7,zh-CN;q=0.6,zh;q=0.5,fr;q=0.4,zh-TW;q=0.3
+baggage
+sentry-environment=production,sentry-release=web%40rc-2544b-9bf1d913,sentry-public_key=6c0b6441371dca01a54934807dcae473,sentry-trace_id=88e04fc72624484587e4edfd588149a8,sentry-org_id=4508804280680448,sentry-transaction=%2F,sentry-sampled=true,sentry-sample_rand=0.5411138673164988,sentry-sample_rate=1
+content-type
+application/json
+cookie
+has_seen_trading_disclosure=true; printr_slippage=5; has_seen_points_boost=true; auth_token=ImV5SmhiR2NpT2lKSVV6STFOaUlzSW5SNWNDSTZJa3BYVkNKOS5leUpoWTJOdmRXNTBJam9pWldsd01UVTFPakU2TUhnMlJHRTVSalUwTXpBMU1UQTBOVEE1WTJFd00yRkdOVFkyTnpBMk4wTTRZbUpoTURWbU5tUTRJaXdpWlhod0lqb3hOell6TmpZeE1EWTBMQ0oxWVhRaU9qRTNOakkwTlRFME5qUXNJblZ6WlhKZmFXUWlPaUkxTWpJM0luMC5HcEVacjM3eWZSQVZJenB6cXV0alVMcW9LUV95WHlTVzJZLXdXWnU1NzA0Ig%3D%3D; ph_phc_CrN67hUaGw0I5V5GSnVyQScDXQDfDlEcZOLQS4H1rYd_posthog=%7B%22distinct_id%22%3A%22019a0779-41ac-744f-b574-ac3255ad0d5e%22%2C%22%24sesid%22%3A%5B1762530950949%2C%22019a5e46-8c4b-7369-8174-e0f8d5e98976%22%2C1762518273099%5D%2C%22%24initial_person_info%22%3A%7B%22r%22%3A%22https%3A%2F%2Ft.co%2FE3jazQ4d1H%22%2C%22u%22%3A%22https%3A%2F%2Fapp.printr.money%2F%22%7D%7D
+priority
+u=1, i
+referer
+https://app.printr.money/
+sec-ch-ua
+"Not;A=Brand";v="99", "Opera GX";v="123", "Chromium";v="139"
+sec-ch-ua-mobile
+?0
+sec-ch-ua-platform
+"Windows"
+sec-fetch-dest
+empty
+sec-fetch-mode
+cors
+sec-fetch-site
+same-origin
+sentry-trace
+88e04fc72624484587e4edfd588149a8-8981a73ad359ad06-1
+user-agent
+Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36 OPR/123.0.0.0
+
+
+getMarketplaceTokens
+Request URL
+https://app.printr.money/api/getMarketplaceTokens?sort=by-newly-created&chains=solana%3A5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp%2Ceip155%3A8453%2Ceip155%3A42161%2Ceip155%3A43114%2Ceip155%3A56%2Ceip155%3A1%2Ceip155%3A5000&page=1&pageSize=20&query=&sortOrder=DESC
+Request Method
+GET
+Status Code
+200 OK
+Remote Address
+[2606:4700::6812:bc4]:443
+Referrer Policy
+strict-origin-when-cross-origin
+alt-svc
+h3=":443"; ma=86400
+cache-control
+public, max-age=5
+cf-placement
+remote-WAW
+cf-ray
+99ae0461c88b0ec6-EZE
+content-encoding
+gzip
+content-type
+application/json
+date
+Fri, 07 Nov 2025 15:55:50 GMT
+priority
+u=1,i
+server
+cloudflare
+server-timing
+cfExtPri
+speculation-rules
+"/cdn-cgi/speculation"
+vary
+Accept-Encoding
+:authority
+app.printr.money
+:method
+GET
+:path
+/api/getMarketplaceTokens?sort=by-newly-created&chains=solana%3A5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp%2Ceip155%3A8453%2Ceip155%3A42161%2Ceip155%3A43114%2Ceip155%3A56%2Ceip155%3A1%2Ceip155%3A5000&page=1&pageSize=20&query=&sortOrder=DESC
+:scheme
+https
+accept
+*/*
+accept-encoding
+gzip, deflate, br, zstd
+accept-language
+es-419,es;q=0.9,en;q=0.8,it;q=0.7,zh-CN;q=0.6,zh;q=0.5,fr;q=0.4,zh-TW;q=0.3
+baggage
+sentry-environment=production,sentry-release=web%40rc-2544b-9bf1d913,sentry-public_key=6c0b6441371dca01a54934807dcae473,sentry-trace_id=88e04fc72624484587e4edfd588149a8,sentry-org_id=4508804280680448,sentry-transaction=%2F,sentry-sampled=true,sentry-sample_rand=0.5411138673164988,sentry-sample_rate=1
+cookie
+has_seen_trading_disclosure=true; printr_slippage=5; has_seen_points_boost=true; auth_token=ImV5SmhiR2NpT2lKSVV6STFOaUlzSW5SNWNDSTZJa3BYVkNKOS5leUpoWTJOdmRXNTBJam9pWldsd01UVTFPakU2TUhnMlJHRTVSalUwTXpBMU1UQTBOVEE1WTJFd00yRkdOVFkyTnpBMk4wTTRZbUpoTURWbU5tUTRJaXdpWlhod0lqb3hOell6TmpZeE1EWTBMQ0oxWVhRaU9qRTNOakkwTlRFME5qUXNJblZ6WlhKZmFXUWlPaUkxTWpJM0luMC5HcEVacjM3eWZSQVZJenB6cXV0alVMcW9LUV95WHlTVzJZLXdXWnU1NzA0Ig%3D%3D; ph_phc_CrN67hUaGw0I5V5GSnVyQScDXQDfDlEcZOLQS4H1rYd_posthog=%7B%22distinct_id%22%3A%22019a0779-41ac-744f-b574-ac3255ad0d5e%22%2C%22%24sesid%22%3A%5B1762530944535%2C%22019a5e46-8c4b-7369-8174-e0f8d5e98976%22%2C1762518273099%5D%2C%22%24initial_person_info%22%3A%7B%22r%22%3A%22https%3A%2F%2Ft.co%2FE3jazQ4d1H%22%2C%22u%22%3A%22https%3A%2F%2Fapp.printr.money%2F%22%7D%7D
+priority
+u=1, i
+referer
+https://app.printr.money/
+sec-ch-ua
+"Not;A=Brand";v="99", "Opera GX";v="123", "Chromium";v="139"
+sec-ch-ua-mobile
+?0
+sec-ch-ua-platform
+"Windows"
+sec-fetch-dest
+empty
+sec-fetch-mode
+cors
+sec-fetch-site
+same-origin
+sentry-trace
+88e04fc72624484587e4edfd588149a8-904fc16f8e01128b-1
+user-agent
+Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36 OPR/123.0.0.0

@@ -2,6 +2,9 @@
   const WID = "printr-mini-pnl-banner";
   let hasLoadedOnce = false;
   let _refreshTimer = null;
+  const AUTO_REFRESH_INTERVAL = 3000;
+  let _autoRefreshTimer = null;
+  let _scanInFlight = false;
   
   console.log("[CS] content script loaded");
 
@@ -109,6 +112,19 @@
     tabsBar.parentElement.insertBefore(host, tabsBar);
     console.log("[CS] ensureBanner: banner inserted successfully");
     return host;
+  }
+
+  function startAutoRefreshTicker() {
+    if (_autoRefreshTimer) return;
+    _autoRefreshTimer = setInterval(() => {
+      requestAndRenderIfWallet();
+    }, AUTO_REFRESH_INTERVAL);
+  }
+
+  function releaseScanLock() {
+    if (_scanInFlight) {
+      _scanInFlight = false;
+    }
   }
 
   function renderTokens(tokens) {
@@ -259,6 +275,12 @@
       return;
     }
 
+    if (_scanInFlight) {
+      console.log("[CS] requestAndRenderIfWallet: scan already running, skipping");
+      return;
+    }
+    _scanInFlight = true;
+
     console.log("[CS] requestAndRenderIfWallet: banner ready, requesting wallet from background");
 
     if (!hasLoadedOnce) {
@@ -268,13 +290,15 @@
     console.log("[CS] requestAndRenderIfWallet: opening port to background for scan");
     try {
       const port = chrome.runtime.connect({ name: 'scan-port' });
+      port.onDisconnect.addListener(() => {
+        releaseScanLock();
+      });
       port.onMessage.addListener((resp) => {
         try {
           console.log('[CS] requestAndRenderIfWallet: port response', resp);
           if (!resp?.ok) {
             console.warn('[CS] scan error via port:', resp?.error);
             if (!hasLoadedOnce) showError(resp?.error || 'Scan error');
-            try { port.disconnect(); } catch (e) {}
             return;
           }
           renderTokens(resp.items || []);
@@ -283,6 +307,7 @@
           console.error('[CS] port onMessage handler exception:', e);
           if (!hasLoadedOnce) showError('Exception: ' + (e && e.message));
         } finally {
+          releaseScanLock();
           try { port.disconnect(); } catch (e) {}
         }
       });
@@ -291,6 +316,7 @@
     } catch (e) {
       console.error('[CS] requestAndRenderIfWallet: exception opening port:', e);
       if (!hasLoadedOnce) showError('Connection error');
+      releaseScanLock();
     }
   }
 
@@ -326,17 +352,23 @@
   };
   window.addEventListener("popstate", trig);
 
+  function kickOffInitialLoad(delayMs) {
+    ensureBanner();
+    setTimeout(() => {
+      requestAndRenderIfWallet();
+      startAutoRefreshTicker();
+    }, delayMs);
+  }
+
   if (document.readyState === "loading") {
     console.log("[CS] waiting for DOMContentLoaded");
     document.addEventListener("DOMContentLoaded", () => {
       console.log("[CS] DOMContentLoaded fired");
-      ensureBanner();
-      setTimeout(() => requestAndRenderIfWallet(), 500);
+      kickOffInitialLoad(500);
     }, { once: true });
   } else {
     console.log("[CS] document already ready");
-    ensureBanner();
-    setTimeout(() => requestAndRenderIfWallet(), 500);
+    kickOffInitialLoad(500);
   }
 
   chrome.runtime.onMessage?.addListener((msg) => {

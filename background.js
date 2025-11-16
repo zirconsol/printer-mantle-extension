@@ -204,6 +204,54 @@ function formatUSD(value) {
   }
 }
 
+const ENTRY_CACHE_STORAGE_KEY = 'entry_price_cache_v1';
+const ENTRY_CACHE_VERSION = 1;
+let _entryCacheState = null;
+let _entryCacheLoading = null;
+
+async function getEntryCacheState() {
+  if (_entryCacheState) return _entryCacheState;
+  if (_entryCacheLoading) return _entryCacheLoading;
+  _entryCacheLoading = (async function() {
+    var cache = { version: ENTRY_CACHE_VERSION, entries: {} };
+    if (chrome?.storage?.local) {
+      try {
+        var stored = await chrome.storage.local.get([ENTRY_CACHE_STORAGE_KEY]);
+        var raw = stored && stored[ENTRY_CACHE_STORAGE_KEY];
+        if (raw && typeof raw === 'object' && raw.version === ENTRY_CACHE_VERSION && raw.entries) {
+          cache = raw;
+        }
+      } catch (e) {
+        console.warn('[BG] entry cache load error:', e && e.message ? e.message : e);
+      }
+    }
+    if (!cache.entries || typeof cache.entries !== 'object') cache.entries = {};
+    _entryCacheState = cache;
+    _entryCacheLoading = null;
+    return cache;
+  })();
+  return _entryCacheLoading;
+}
+
+async function persistEntryCacheState() {
+  if (!_entryCacheState || !chrome?.storage?.local) return;
+  try {
+    var payload = {};
+    payload[ENTRY_CACHE_STORAGE_KEY] = _entryCacheState;
+    await chrome.storage.local.set(payload);
+  } catch (e) {
+    console.warn('[BG] entry cache save error:', e && e.message ? e.message : e);
+  }
+}
+
+function entryCacheKey(wallet, token) {
+  try {
+    return wallet.toLowerCase() + '__' + token.toLowerCase();
+  } catch (e) {
+    return wallet + '__' + token;
+  }
+}
+
 async function getTokenPrice(contractAddress) {
   try {
     var lowerAddr = contractAddress.toLowerCase();
@@ -294,75 +342,88 @@ async function mantleScanTokenContracts(wallet) {
   return Array.from(set);
 }
 
-// Obtener compras (buys) para un token hacia la wallet usando MantleScan: sumar native value de la tx
+// Obtener compras (buys) para un token hacia la wallet usando MantleScan con caché incremental
 async function mantleGetBuysForToken(wallet, token, decimals) {
   try {
-    var url = MS_API + "?module=account&action=tokentx&address=" + wallet + "&contractaddress=" + token + "&startblock=0&endblock=999999999&sort=asc";
-    var r = await fetch(url, { method: "GET" });
-    if (!r.ok) {
-      console.warn('[BG] mantleGetBuysForToken: MantleScan tokentx fetch not ok', r.status);
-      return null;
-    }
-    var j = await r.json().catch(function() { return null; });
-    if (!j || j.status !== "1" || !Array.isArray(j.result)) {
-      console.log('[BG] mantleGetBuysForToken: no tokentx result or empty', j);
-      return null;
-    }
-    console.log('[BG] mantleGetBuysForToken: tokentx count', j.result.length, 'for', token, 'wallet', wallet);
-
+    var cache = await getEntryCacheState();
+    var cacheKey = entryCacheKey(wallet, token);
+    var cachedRecord = cache.entries[cacheKey];
     var sumTokensRaw = 0n;
     var sumMntRaw = 0n;
     var buys = 0;
+    var lastBlockCached = null;
+    if (cachedRecord) {
+      try { sumTokensRaw = BigInt(cachedRecord.totalTokensRaw || '0'); } catch (e) { sumTokensRaw = 0n; }
+      try { sumMntRaw = BigInt(cachedRecord.totalMntRaw || '0'); } catch (e) { sumMntRaw = 0n; }
+      if (typeof cachedRecord.buys === 'number') buys = cachedRecord.buys;
+      if (typeof cachedRecord.lastBlock === 'number') lastBlockCached = cachedRecord.lastBlock;
+    }
+    function buildResult() {
+      if (sumTokensRaw === 0n || sumMntRaw === 0n) {
+        return { buys: buys, totalTokensRaw: sumTokensRaw.toString(), totalMntRaw: sumMntRaw.toString(), entryPriceMNT: null };
+      }
+      var totalTokens = Number(sumTokensRaw) / Math.pow(10, decimals);
+      var totalMnt = Number(sumMntRaw) / 1e18;
+      var entryPriceMNT = totalTokens > 0 ? totalMnt / totalTokens : null;
+      return { buys: buys, totalTokensRaw: sumTokensRaw.toString(), totalMntRaw: sumMntRaw.toString(), entryPriceMNT: entryPriceMNT };
+    }
 
-  // cache for symbol lookups
+    var startBlock = lastBlockCached != null ? Math.max(0, lastBlockCached + 1) : 0;
+    var url = MS_API + "?module=account&action=tokentx&address=" + wallet + "&contractaddress=" + token + "&startblock=" + startBlock + "&endblock=999999999&sort=asc";
+    var r = await fetch(url, { method: "GET" });
+    if (!r.ok) {
+      console.warn('[BG] mantleGetBuysForToken: MantleScan tokentx fetch not ok', r.status);
+      if (cachedRecord) {
+        return buildResult();
+      }
+      return null;
+    }
+    var j = await r.json().catch(function() { return null; });
+    if (!j || !Array.isArray(j.result)) {
+      console.log('[BG] mantleGetBuysForToken: no tokentx result array', j);
+      if (cachedRecord) {
+        return buildResult();
+      }
+      return null;
+    }
+    console.log('[BG] mantleGetBuysForToken: tokentx count', j.result.length, 'for', token, 'wallet', wallet, 'startBlock', startBlock);
+
     var symbolCache = {};
     var TRANSFER_TOPIC = '0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef';
     var walletLower = wallet.toLowerCase();
     var walletTopic = pad32(walletLower).toLowerCase();
-  // RPC used to resolve ERC20 symbol when needed
-  var rpcUrl = DEFAULT_RPC;
+    var rpcUrl = DEFAULT_RPC;
+    var maxBlockSeen = lastBlockCached;
+    var newLogsProcessed = 0;
 
     for (var i = 0; i < j.result.length; i++) {
       var tx = j.result[i];
       var to = (tx.to || '').toLowerCase();
-      if (to !== walletLower) continue; // only incoming transfers for this token
+      if (to !== walletLower) continue;
+      var blockNumberRaw = tx.blockNumber || tx.blocknumber || tx.blockNum || tx.blocknum || null;
+      var blockNumber = blockNumberRaw != null ? parseInt(blockNumberRaw, 10) : NaN;
+      if (!isNaN(blockNumber)) {
+        if (maxBlockSeen == null || blockNumber > maxBlockSeen) maxBlockSeen = blockNumber;
+      }
 
-      // token amount (raw) from tokentx result
+      var tokenValRaw = 0n;
       try {
-        var tokenValRaw = BigInt(tx.value || tx.tokenValue || tx.contractValue || '0');
+        tokenValRaw = BigInt(tx.value || tx.tokenValue || tx.contractValue || '0');
       } catch (e) {
         try { tokenValRaw = BigInt(tx.tokenDecimal ? String(tx.value) : '0'); } catch (e2) { tokenValRaw = 0n; }
       }
       if (tokenValRaw <= 0n) continue;
       var txhash = tx.hash || tx.transactionHash || tx.txhash || tx.txHash;
+      if (!txhash) continue;
       console.log('[BG] mantleGetBuysForToken: incoming tokentx', { token: token, txhash: txhash, tokenValRaw: tokenValRaw.toString() });
 
-      // fetch transaction receipt to inspect logs for WMNT (or other ERC20) transfers from the wallet
       try {
-        var txhash = tx.hash || tx.transactionHash || tx.txhash;
-        if (!txhash) continue;
-        var receiptUrl = MS_API + "?module=proxy&action=eth_getTransactionReceipt&txhash=" + txhash;
-        // use direct RPC to fetch receipt to avoid explorer proxy limits
-        var receipt = null;
-        try {
-          receipt = await rpc(DEFAULT_RPC, 'eth_getTransactionReceipt', [txhash]);
-        } catch (e) {
-          console.log('[BG] mantleGetBuysForToken: rpc eth_getTransactionReceipt failed for', txhash, e && e.message);
-          continue;
-        }
+        var receipt = await rpc(DEFAULT_RPC, 'eth_getTransactionReceipt', [txhash]);
         if (!receipt || !Array.isArray(receipt.logs)) {
           console.log('[BG] mantleGetBuysForToken: no receipt.logs for tx', txhash, receipt);
           continue;
         }
-        console.log('[BG] mantleGetBuysForToken: receipt logs length', receipt.logs.length, 'for tx', txhash);
-        if (receipt.logs.length > 0) {
-          try {
-            var firstLog = receipt.logs[0];
-            console.log('[BG] mantleGetBuysForToken: receipt first log sample', { address: firstLog.address, topics0: firstLog.topics && firstLog.topics[0], data: String(firstLog.data).slice(0, 66) });
-          } catch (e) { }
-        }
 
-        // look for any Transfer logs in the same receipt where 'from' == wallet and address != token
         var mntFound = false;
         for (var li = 0; li < receipt.logs.length; li++) {
           var lg = receipt.logs[li];
@@ -372,42 +433,33 @@ async function mantleGetBuysForToken(wallet, token, decimals) {
           var fromTopic = (lg.topics[1] || '').toLowerCase();
           var toTopic = (lg.topics[2] || '').toLowerCase();
           var logAddr = (lg.address || '').toLowerCase();
-          console.log('[BG] mantleGetBuysForToken: inspecting log', { logAddr: logAddr, fromTopic: fromTopic, toTopic: toTopic });
 
-          // if this log represents the token transfer to wallet we are already processing, skip
           if (logAddr === token.toLowerCase() && toTopic === walletTopic) continue;
 
-          // if wallet was sender of some other ERC20 in this tx, consider it payment
           if (fromTopic === walletTopic && logAddr !== token.toLowerCase()) {
-            // amount raw is in lg.data
             var otherAmtRaw = BigInt(lg.data || '0x0');
-
-            // try to resolve symbol (cache)
             var sym = symbolCache[logAddr];
             if (sym === undefined) {
               try {
                 sym = await erc20_symbol(rpcUrl, logAddr).catch(function() { return null; });
-                if (!sym) console.log('[BG] mantleGetBuysForToken: symbol lookup returned null for', logAddr);
-              } catch (e) { sym = null; console.log('[BG] mantleGetBuysForToken: symbol lookup error for', logAddr, e && e.message); }
+              } catch (e) { sym = null; }
               symbolCache[logAddr] = sym;
             }
 
-            // if the other token is WMNT (wrapped MNT), treat its amount as MNT spent
             if (sym && (sym || '').toUpperCase() === 'WMNT') {
               sumTokensRaw += tokenValRaw;
               sumMntRaw += otherAmtRaw;
               buys++;
+              newLogsProcessed++;
               mntFound = true;
               console.log('[BG] mantleGetBuysForToken: detected WMNT payment', { token: token, tx: txhash, otherAddr: logAddr, otherAmtRaw: otherAmtRaw.toString() });
-              break; // stop scanning logs for this tx
+              break;
             }
           }
         }
 
-        // fallback: if no WMNT transfer found, also check native tx value (some swaps may include native value)
         if (!mntFound) {
           try {
-            // use RPC eth_getTransactionByHash to get native value
             var txres = await rpc(DEFAULT_RPC, 'eth_getTransactionByHash', [txhash]);
             if (txres) {
               var mntRawHex = txres.value || '0x0';
@@ -416,6 +468,7 @@ async function mantleGetBuysForToken(wallet, token, decimals) {
                 sumTokensRaw += tokenValRaw;
                 sumMntRaw += mntRaw;
                 buys++;
+                newLogsProcessed++;
                 console.log('[BG] mantleGetBuysForToken: detected native MNT payment', { token: token, tx: txhash, mntRaw: mntRaw.toString() });
               }
             }
@@ -428,15 +481,28 @@ async function mantleGetBuysForToken(wallet, token, decimals) {
       }
     }
 
-    if (sumTokensRaw === 0n || sumMntRaw === 0n) return { buys: buys, totalTokensRaw: sumTokensRaw.toString(), totalMntRaw: sumMntRaw.toString(), entryPriceMNT: null };
+    var cacheDirty = false;
+    if (maxBlockSeen != null && maxBlockSeen !== lastBlockCached) cacheDirty = true;
+    if (newLogsProcessed > 0 && !cacheDirty) cacheDirty = true;
 
-    // compute weighted average price in MNT per token
-    var totalTokens = Number(sumTokensRaw) / Math.pow(10, decimals);
-    var totalMnt = Number(sumMntRaw) / 1e18;
-    var entryPriceMNT = totalMnt / totalTokens;
+    if (cacheDirty) {
+      cache.entries[cacheKey] = {
+        version: ENTRY_CACHE_VERSION,
+        wallet: walletLower,
+        token: token.toLowerCase(),
+        buys: buys,
+        totalTokensRaw: sumTokensRaw.toString(),
+        totalMntRaw: sumMntRaw.toString(),
+        lastBlock: maxBlockSeen,
+        updatedAt: Date.now()
+      };
+      await persistEntryCacheState();
+      console.log('[BG] mantleGetBuysForToken: cache updated', { key: cacheKey, lastBlock: maxBlockSeen, buys: buys });
+    }
 
-    return { buys: buys, totalTokensRaw: sumTokensRaw.toString(), totalMntRaw: sumMntRaw.toString(), entryPriceMNT: entryPriceMNT };
+    return buildResult();
   } catch (e) {
+    console.warn('[BG] mantleGetBuysForToken error:', e && e.message ? e.message : e);
     return null;
   }
 }
